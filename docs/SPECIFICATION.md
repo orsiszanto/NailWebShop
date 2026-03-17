@@ -2,23 +2,23 @@
 
 **Webes alkalmazás specifikáció**
 **Programrendszerek fejlesztése gyakorlat**
-**MEAN Stack – Demonstrációs projekt**
+**Angular + Firebase – Demonstrációs projekt**
 **2026. tavasz**
 
 ---
 
 ## 1. Bevezetés
 
-A Receptgyűjtemény egy MEAN stack alapú webes alkalmazás, amely lehetővé teszi receptek létrehozását, böngészését és értékelését. A projekt célja a kurzus során tanult technológiák demonstrálása egy egyszerű, de teljes értékű CRUD rendszeren keresztül.
+A Műköröm Webshop egy Angular és Firebase alapú webes alkalmazás, amely lehetővé teszi műköröm alapanyagok böngészését, kosárba helyezését és megrendelését. A projekt célja egy modern, reszponzív webshop megvalósítása, amely bemutatja a frontend és backend integrációját valós környezetben.
 
-A rendszer két szerepkört különböztet meg: adminisztrátor és felhasználó. Az admin előre regisztrálva van, a felhasználók pedig a regisztrációs felületen keresztül hozhatnak létre fiókot.
+A rendszer két fő szerepkört különböztet meg: adminisztrátor és vásárló. A vásárlók regisztráció után rendeléseket adhatnak le, míg az adminisztrátor a termékek és rendelések kezeléséért felel.
 
 ### 1.1. Technológiai stack
 
-- **MongoDB** – NoSQL adatbázis
-- **Express.js** – Szerver oldali keretrendszer
 - **Angular** – Kliens oldali keretrendszer
-- **Node.js** – Futási környezet
+- **Firebase** – Backend szolgáltatások
+- **Firebase Authentication** – Felhasználókezelés
+- **SCSS** – Stíluskezelés
 
 ---
 
@@ -26,45 +26,53 @@ A rendszer két szerepkört különböztet meg: adminisztrátor és felhasznál�
 
 ### 2.1. Adminisztrátor
 
-Az admin előre regisztrált fiókkal rendelkezik (seed adat). Jogosultságai:
+Az admin előre regisztrált fiókkal rendelkezik, teljes hozzáféréssel a rendszerhez (seed adat). Jogosultságai:
 
-- Kategóriák létrehozása, módosítása és törlése
-- Receptek létrehozása, módosítása és törlése
-- Összes értékelés megtekintése és moderálása (törlés)
+- Termékek létrehozása, módosítása és törlése
+- Kategóriák kezelése
+- Rendelések megtekintése
+- Rendelések státuszának módosítása
 
-### 2.2. Felhasználó
+### 2.2. Vásárló
 
-A felhasználó a regisztrációs felületen keresztül hozhat létre fiókot. Jogosultságai:
+A vásárló regisztráció után használhatja a rendszer teljes funkcionalitását. Jogosultságai:
 
-- Receptek böngészése és részleteinek megtekintése
-- Értékelés írása receptekhez
-- Saját értékeléseinek módosítása és törlése
-- Receptek szűrése kategória szerint
+- Termékek böngészése és szűrése
+- Termékek kosárba helyezése
+- Rendelések leadása
+- Saját rendelések megtekintése
+- Profiladatok kezelése
 
 ---
 
 ## 3. Funkcionális követelmények
 
-1. A felhasználó regisztrálhat az alkalmazásba felhasználónév, e-mail és jelszó megadásával.
-2. A felhasználó bejelentkezhet az e-mail és jelszó párosával, sikeres bejelentkezés után JWT tokent kap.
-3. Az admin kategóriákat hozhat létre, módosíthat és törölhet.
-4. Az admin recepteket hozhat létre hozzávalókkal együtt, módosíthatja és törölheti azokat.
-5. A bejelentkezett felhasználó értékelést írhat receptekhez (1–5 pontszám + opcionális komment).
-6. A felhasználó módosíthatja és törölheti a saját értékeléseit.
-7. Bárki (bejelentkezés nélkül is) böngészheti a recepteket és szűrhet kategória szerint.
-8. A recept részletei oldalon megjeleníthetőek a hozzávalók és az értékelések.
-9. Az adatbázis demo adatokat tartalmaz (legalább 3 kategória, 5 recept, hozzávalókkal).
+1. A felhasználó regisztrálhat e-mail és jelszó megadásával.
+2. A felhasználó bejelentkezhet a rendszerbe Firebase Authentication segítségével.
+3. A felhasználó böngészheti a termékeket kategória szerint.
+4. A felhasználó kereshet termékeket név alapján.
+5. A felhasználó rendezheti a termékeket ár vagy név szerint.
+6. A felhasználó termékeket helyezhet kosárba.
+7. A kosár tartalma megjeleníthető és módosítható.
+8. A felhasználó rendelést adhat le a kosár tartalma alapján.
+9. A felhasználó megtekintheti saját rendeléseit.
+10. Az admin termékeket hozhat létre, módosíthat és törölhet.
+11. Az admin kategóriákat kezelhet.
+12. Az admin megtekintheti az összes rendelést.
+13. Az admin módosíthatja a rendelés státuszát.
 
 ---
 
 ## 4. Nem-funkcionális követelmények
 
-1. A jelszó tárolás bcrypt hash-sel történik.
-2. JWT alapú autentikáció, token lejárati idővel.
-3. Role-based hozzáférés-vezérlés middleware-rel megvalósítva.
-4. CORS konfiguráció a kliens-szerver kommunikációhoz.
-5. Hibakezelés: a szerver értelmes HTTP státuszkodokat és hibaüzeneteket ad vissza.
-6. Reszponzív felhasználói felület Angular Material komponensekkel.
+1. Firebase Authentication alapú biztonságos bejelentkezés.
+2. Role-based hozzáférés (admin vs felhasználó).
+3. Reszponzív felhasználói felület (mobile-first megközelítés).
+4. Lazy loading alkalmazása Angular routing esetén.
+5. Hatékony adatlekérdezés Firebase Firestore használatával.
+6. Hibakezelés felhasználóbarát üzenetekkel.
+7. Egységes design rendszer és UI komponensek használata.
+8. Gyors betöltési idő és optimalizált erőforrás-kezelés.
 
 ---
 
@@ -74,30 +82,36 @@ Az Angular alkalmazás az alábbi fő nézeteket (oldalakat) tartalmazza:
 
 ### 5.1. Nyilvános nézetek
 
-- **Kezdőlap** – Receptek listája, kategória szűrővel
-- **Recept részletek** – Leírás, hozzávalók, értékelések
+- **Főoldal** – Termékek listázva
+- **Terméklista oldal** – Szűrés és keresés lehetősége
+- **Termék részletek** - Termékadatok megjelenítése
 - **Bejelentkezés** – E-mail és jelszó megadása
 - **Regisztráció** – Új fiók létrehozása
 
 ### 5.2. Bejelentkezett felhasználói nézetek
 
-- **Értékelés írása / módosítása** – Pontszám és komment űrlap
+- **Kosár oldal** – Kosár tartalmának kezelése
+- **Rendelés oldal** – Rendelés leadása
+- **Profil oldal** – Felhasználói adatok kezelése
+- **Saját rendelések** – Korábbi rendelések listája
+- **Rendelés részletek** – Egy adott rendelés megjelenítése
 
 ### 5.3. Admin nézetek
 
-- **Kategória kezelés** – CRUD műveletek kategóriákra
-- **Recept kezelés** – CRUD műveletek receptekre és hozzávalókra
-- **Értékelés moderálás** – Értékelések áttekintése és törlése
+- **Admin dashboard** – Áttekintő felület
+- **Termékkezelés** – CRUD műveletek termékekhez
+- **Kategóriakezelés** – Kategóriák kezelése
+- **Rendeléskezelés** – Rendelések listázása és státusz módosítása
 
 ---
 
 ## 6. Telepítés és futtatás
 
-A rendszer minden komponense konténerizált formában lesz üzemeltetve. A rendszer futtatásához szükséges előfeltételek:
+A rendszer Firebase alapokon működik, ezért külön backend szerver telepítése nem szükséges.
 
 - Node.js (v24)
-- MongoDB (lokális)
 - Angular CLI (v21)
+- Firebase CLI (v15)
 
 ---
 
@@ -107,8 +121,14 @@ A GitHub repository várt struktúrája:
 
 | Mappa / Fájl | Leírás |
 |---|---|
-| `/server` | Express.js szerver forráskód |
-| `/client` | Angular alkalmazás forráskód |
 | `/docs` | Dokumentáció (ez a specifikáció is) |
-| `/prompts` | AI prompt-ok és elemzés |
-| `README.md` | Telepítési útmutató |
+| `/src` | Angular alkalmazás forráskód |
+| `/src/app` | Az alkalmazás fő logikai felépítése (core, layout, shared, features) |
+| `/src/app/core` | Globális szolgáltatások (Firebase, auth, guardok, modellek) |
+| `/src/app/layout` | Layout komponensek (header, navigation, footer, shell) |
+| `/src/app/shared` | Újrahasznosítható UI komponensek és utility-k |
+| `/src/app/features` | Funkciók szerinti modulok (shop, cart, order, user, admin) |
+| `/src/styles` | Globális stílusok és design rendszer |
+| `/.github/workflows` | Automatikus értékelés és CI folyamatok |
+| `.gitignore` | Git által figyelmen kívül hagyott fájlok |
+| `README.md` | Telepítési és futtatási útmutató |
