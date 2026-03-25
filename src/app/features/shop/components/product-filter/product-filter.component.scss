@@ -8,19 +8,61 @@
 .product-filter {
   display: flex;
   flex-direction: column;
-  gap: $space-5;
+  gap: $space-4;
   padding: $space-5;
   border-radius: $radius-lg;
   background-color: $color-surface;
   box-shadow: $shadow-sm;
 }
 
+/* HEADER */
+.product-filter__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
 .product-filter__header h2 {
   margin-bottom: 0;
   font-size: $font-size-lg;
-  color: $color-text-primary;
 }
 
+/* TOGGLE ICON ANIMATION */
+.product-filter__toggle {
+  font-size: $font-size-lg;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.product-filter__toggle.is-open {
+  transform: rotate(45deg); // + → x
+}
+
+/* COLLAPSIBLE ANIMATION */
+.product-filter__content {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: 
+    max-height 0.4s ease,
+    opacity 0.3s ease;
+}
+
+.product-filter__content.is-open {
+  max-height: 1000px; // elég nagy legyen
+  opacity: 1;
+}
+
+/* INNER CONTENT */
+.product-filter__inner {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+  margin-top: $space-4;
+}
+
+/* FIELDS */
 .product-filter__controls {
   display: grid;
   gap: $space-4;
@@ -35,7 +77,6 @@
 .product-filter__field label {
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: $color-text-primary;
 }
 
 .product-filter__field select {
@@ -44,8 +85,6 @@
   border: 1px solid $color-border;
   border-radius: $radius-md;
   background-color: $color-surface;
-  color: $color-text-primary;
-  font-size: $font-size-sm;
 }
 
 .product-filter__field select:focus {
@@ -53,6 +92,7 @@
   border-color: $color-accent;
 }
 
+/* CHECKBOX */
 .product-filter__options {
   display: flex;
   flex-direction: column;
@@ -60,24 +100,13 @@
 }
 
 .product-filter__checkbox {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: $space-2;
   min-height: 44px;
-  color: $color-text-primary;
-  font-size: $font-size-sm;
 }
 
-.product-filter__checkbox input {
-  width: 16px;
-  height: 16px;
-}
-
-.product-filter__actions {
-  display: flex;
-  justify-content: flex-start;
-}
-
+/* BUTTON */
 .product-filter__apply-button {
   min-height: 44px;
   padding: $space-3 $space-5;
@@ -85,7 +114,6 @@
   border-radius: $radius-md;
   background-color: $color-primary;
   color: $color-surface;
-  font-size: $font-size-sm;
   font-weight: $font-weight-semibold;
   cursor: pointer;
 }
@@ -94,20 +122,27 @@
   background-color: $color-primary-hover;
 }
 
+/* RESPONSIVE */
 @include respond-to(md) {
   .product-filter__controls {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include respond-to(lg) {
+
+  /* desktopon mindig látszódjon */
+  .product-filter__content {
+    max-height: none;
+    opacity: 1;
+  }
+
+  .product-filter__controls {
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .product-filter__options {
     flex-direction: row;
     gap: $space-5;
-    flex-wrap: wrap;
-  }
-}
-
-@include respond-to(lg) {
-  .product-filter__controls {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
