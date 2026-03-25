@@ -1,0 +1,65 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.new-arrivals__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $space-5;
+}
+
+.new-arrivals__header a {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.new-arrivals__grid {
+  display: grid;
+  gap: $space-4;
+}
+
+/* PRODUCT CARD */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+
+  padding: $space-4;
+  border-radius: $radius-lg;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+}
+
+.product-card__image {
+  width: 100%;
+  height: 140px;
+  background-color: $color-surface-alt;
+  border-radius: $radius-md;
+}
+
+.product-card__title {
+  font-size: $font-size-sm;
+}
+
+.product-card__price {
+  font-weight: $font-weight-semibold;
+}
+
+/* tablet */
+@include respond-to(md) {
+  .new-arrivals__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop */
+@include respond-to(lg) {
+  .new-arrivals__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

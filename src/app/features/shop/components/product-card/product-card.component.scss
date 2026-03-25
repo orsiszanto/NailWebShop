@@ -1,0 +1,97 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-radius: $radius-lg;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+}
+
+.product-card__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  padding: $space-4;
+  background-color: $color-surface-alt;
+  color: $color-text-muted;
+  font-size: $font-size-sm;
+  text-align: center;
+}
+
+.product-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4;
+}
+
+.product-card__title {
+  margin-bottom: 0;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.product-card__price {
+  margin-bottom: 0;
+}
+
+.product-card__old-price {
+  margin-right: $space-2;
+  color: $color-text-muted;
+  text-decoration: line-through;
+}
+
+.product-card__current-price {
+  color: $color-text-primary;
+  font-weight: $font-weight-bold;
+}
+
+.product-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  margin-top: auto;
+}
+
+.product-card__cart-button,
+.product-card__details-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: $space-2 $space-4;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+}
+
+.product-card__cart-button {
+  border: none;
+  background-color: $color-primary;
+  color: $color-surface;
+  cursor: pointer;
+}
+
+.product-card__cart-button:hover {
+  background-color: $color-primary-hover;
+}
+
+.product-card__details-link {
+  border: 1px solid $color-border;
+  background-color: $color-surface;
+  color: $color-text-primary;
+}
+
+.product-card__details-link:hover {
+  background-color: $color-surface-alt;
+}

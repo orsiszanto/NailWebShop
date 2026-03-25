@@ -1,0 +1,54 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.featured-offers__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-5;
+}
+
+.featured-offers__header a {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.featured-offers__grid {
+  display: grid;
+  gap: $space-4;
+}
+
+/* highlight card */
+.product-card--highlight {
+  border: 1px solid $color-primary-soft;
+}
+
+/* ár styling */
+.product-card__old-price {
+  text-decoration: line-through;
+  color: $color-text-muted;
+  margin-right: $space-2;
+}
+
+.product-card__new-price {
+  color: $color-primary;
+  font-weight: $font-weight-bold;
+}
+
+/* responsive */
+@include respond-to(md) {
+  .featured-offers__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include respond-to(lg) {
+  .featured-offers__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

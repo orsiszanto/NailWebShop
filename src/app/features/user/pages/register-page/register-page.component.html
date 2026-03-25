@@ -1,0 +1,97 @@
+<section class="auth-page">
+  <div class="u-container auth-page__content">
+
+    <div class="auth-page__intro">
+      <p class="auth-page__eyebrow">Nailshop</p>
+      <h1>Hozd létre a fiókodat</h1>
+      <p class="auth-page__description">
+        Regisztrálj, hogy gyorsabban vásárolhass, nyomon követhesd rendeléseidet, és elsőként értesülj az újdonságokról.
+      </p>
+
+      <div class="auth-page__highlights">
+        <div class="auth-page__highlight">
+          <h2>Gyorsabb vásárlás</h2>
+          <p>Mentett adatokkal és átláthatóbb rendelési folyamattal.</p>
+        </div>
+
+        <div class="auth-page__highlight">
+          <h2>Exkluzív ajánlatok</h2>
+          <p>Értesülj elsőként az akciókról és új termékekről.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card__header">
+        <h2>Regisztráció</h2>
+        <p>Töltsd ki az adataidat, és hozd létre saját fiókodat.</p>
+      </div>
+
+      <form class="auth-form" novalidate>
+        <div class="auth-form__field">
+          <label for="register-name">Név</label>
+          <input
+            id="register-name"
+            type="text"
+            name="name"
+            autocomplete="name"
+            placeholder="Teljes neved"
+          />
+          <p class="auth-form__hint">Ide fog majd kerülni a név validáció üzenete.</p>
+        </div>
+
+        <div class="auth-form__field">
+          <label for="register-email">Email cím</label>
+          <input
+            id="register-email"
+            type="email"
+            name="email"
+            autocomplete="email"
+            placeholder="pelda@email.com"
+          />
+          <p class="auth-form__hint">Ide fog majd kerülni az email validáció üzenete.</p>
+        </div>
+
+        <div class="auth-form__field">
+          <label for="register-password">Jelszó</label>
+          <input
+            id="register-password"
+            type="password"
+            name="password"
+            autocomplete="new-password"
+            placeholder="••••••••"
+          />
+          <p class="auth-form__hint">Ide fog majd kerülni a jelszó validáció üzenete.</p>
+        </div>
+
+        <div class="auth-form__field">
+          <label for="register-password-confirm">Jelszó megerősítése</label>
+          <input
+            id="register-password-confirm"
+            type="password"
+            name="passwordConfirm"
+            autocomplete="new-password"
+            placeholder="••••••••"
+          />
+          <p class="auth-form__hint">Ide fog majd kerülni a jelszó megerősítés üzenete.</p>
+        </div>
+
+        <div class="auth-form__error" aria-live="polite">
+          Itt fog megjelenni az általános hibaüzenet.
+        </div>
+
+        <button type="submit" class="auth-form__submit">
+          Regisztráció
+        </button>
+      </form>
+
+      <div class="auth-card__footer">
+        <p>
+          Már van fiókod?
+          <a routerLink="/user/login">Bejelentkezés</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>

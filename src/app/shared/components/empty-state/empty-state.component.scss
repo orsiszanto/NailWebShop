@@ -1,0 +1,49 @@
+@use '../../../../styles/tokens/colors' as *;
+@use '../../../../styles/tokens/spacing' as *;
+@use '../../../../styles/tokens/radius' as *;
+@use '../../../../styles/tokens/shadows' as *;
+@use '../../../../styles/tokens/typography' as *;
+
+.empty-state {
+  display: flex;
+  justify-content: center;
+  padding: $space-8 0;
+}
+
+.empty-state__content {
+  max-width: 480px;
+  width: 100%;
+  padding: $space-6;
+  border-radius: $radius-lg;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+  text-align: center;
+}
+
+.empty-state__content h2 {
+  margin-bottom: $space-3;
+  color: $color-text-primary;
+}
+
+.empty-state__content p {
+  margin-bottom: $space-5;
+  color: $color-text-secondary;
+}
+
+.empty-state__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: $space-3 $space-5;
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-surface;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+}
+
+.empty-state__action:hover {
+  background-color: $color-primary-hover;
+}

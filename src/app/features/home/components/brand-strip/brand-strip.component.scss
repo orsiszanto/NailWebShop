@@ -1,0 +1,61 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.brand-strip {
+  background-color: $color-surface-alt;
+}
+
+.brand-strip h2 {
+  text-align: center;
+  margin-bottom: $space-6;
+}
+
+/* grid */
+.brand-strip__grid {
+  display: grid;
+  gap: $space-4;
+  align-items: center;
+  justify-items: center;
+}
+
+/* brand item */
+.brand-item {
+  width: 100%;
+  max-width: 160px;
+  height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: $color-surface;
+  border-radius: $radius-md;
+
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-muted;
+
+  transition: all 0.2s ease;
+}
+
+.brand-item:hover {
+  color: $color-text-primary;
+  transform: translateY(-2px);
+}
+
+/* tablet */
+@include respond-to(md) {
+  .brand-strip__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* desktop */
+@include respond-to(lg) {
+  .brand-strip__grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

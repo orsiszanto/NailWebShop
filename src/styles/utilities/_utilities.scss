@@ -1,17 +1,20 @@
+@use '../tokens/spacing' as *;
+@use '../abstracts/mixins' as *;
+
 .u-container {
-  width: min(100% - 2rem, 1200px);
+  width: min(100% - #{$space-4 * 2}, 1200px);
   margin-inline: auto;
 }
 
 .u-section {
-  padding-block: 32px;
+  padding-block: $space-7;
 
-  @media (min-width: 768px) {
-    padding-block: 48px;
+  @include respond-to(md) {
+    padding-block: $space-9;
   }
 
-  @media (min-width: 1024px) {
-    padding-block: 64px;
+  @include respond-to(lg) {
+    padding-block: $space-10;
   }
 }
 

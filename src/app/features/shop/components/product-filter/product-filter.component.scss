@@ -1,0 +1,113 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.product-filter {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+  padding: $space-5;
+  border-radius: $radius-lg;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+}
+
+.product-filter__header h2 {
+  margin-bottom: 0;
+  font-size: $font-size-lg;
+  color: $color-text-primary;
+}
+
+.product-filter__controls {
+  display: grid;
+  gap: $space-4;
+}
+
+.product-filter__field {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.product-filter__field label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.product-filter__field select {
+  min-height: 44px;
+  padding: $space-3 $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background-color: $color-surface;
+  color: $color-text-primary;
+  font-size: $font-size-sm;
+}
+
+.product-filter__field select:focus {
+  outline: none;
+  border-color: $color-accent;
+}
+
+.product-filter__options {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.product-filter__checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  min-height: 44px;
+  color: $color-text-primary;
+  font-size: $font-size-sm;
+}
+
+.product-filter__checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+.product-filter__actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.product-filter__apply-button {
+  min-height: 44px;
+  padding: $space-3 $space-5;
+  border: none;
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-surface;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+}
+
+.product-filter__apply-button:hover {
+  background-color: $color-primary-hover;
+}
+
+@include respond-to(md) {
+  .product-filter__controls {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-filter__options {
+    flex-direction: row;
+    gap: $space-5;
+    flex-wrap: wrap;
+  }
+}
+
+@include respond-to(lg) {
+  .product-filter__controls {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

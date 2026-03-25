@@ -1,1 +1,116 @@
-<p>header works!</p>
+<header class="site-header">
+  <div class="u-container site-header__content">
+    <div class="site-header__mobile">
+      <a class="site-header__logo" routerLink="/" (click)="closeMenu()">Nailshop</a>
+
+      <div class="site-header__mobile-actions">
+        <button type="button" aria-label="Keresés megnyitása">
+          Keresés
+        </button>
+
+        <button type="button" aria-label="Kosár megnyitása">
+          Kosár
+        </button>
+
+        <button
+          type="button"
+          aria-label="Menü megnyitása"
+          aria-controls="mobile-menu"
+          [attr.aria-expanded]="isMenuOpen"
+          (click)="toggleMenu()">
+          Menü
+        </button>
+      </div>
+    </div>
+
+    <div class="site-header__desktop">
+      <a class="site-header__logo" routerLink="/">Nailshop</a>
+
+      <div class="site-header__search">
+        <app-search-input></app-search-input>
+      </div>
+
+      <nav class="site-header__nav" aria-label="Fő navigáció">
+        <a routerLink="/shop" [queryParams]="{ category: 'ujdonsagok' }">
+          Újdonságok
+        </a>
+
+        <a routerLink="/shop" [queryParams]="{ category: 'alapanyagok' }">
+          Alapanyagok
+        </a>
+
+        <a routerLink="/shop" [queryParams]="{ category: 'lakkok' }">
+          Lakkok
+        </a>
+
+        <a routerLink="/shop" [queryParams]="{ category: 'diszitok' }">
+          Díszítők
+        </a>
+      </nav>
+
+      <button
+        class="site-header__cart-button"
+        type="button"
+        aria-label="Kosár megnyitása">
+        Kosár
+      </button>
+    </div>
+  </div>
+
+  <div
+    *ngIf="isMenuOpen"
+    class="mobile-menu"
+    id="mobile-menu">
+    <div class="mobile-menu__overlay" (click)="closeMenu()"></div>
+
+    <div class="mobile-menu__panel">
+      <button
+        class="mobile-menu__close"
+        type="button"
+        aria-label="Menü bezárása"
+        (click)="closeMenu()">
+        ✕
+      </button>
+
+      <nav class="mobile-menu__nav" aria-label="Mobil navigáció">
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'ujdonsagok' }"
+          (click)="closeMenu()">
+          Újdonságok
+        </a>
+
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'alapanyagok' }"
+          (click)="closeMenu()">
+          Alapanyagok
+        </a>
+
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'lakkok' }"
+          (click)="closeMenu()">
+          Lakkok
+        </a>
+
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'diszitok' }"
+          (click)="closeMenu()">
+          Díszítők
+        </a>
+      </nav>
+
+      <div class="mobile-menu__auth">
+        <a routerLink="/user/login" (click)="closeMenu()">
+          Bejelentkezés
+        </a>
+
+        <a routerLink="/user/register" (click)="closeMenu()">
+          Regisztráció
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

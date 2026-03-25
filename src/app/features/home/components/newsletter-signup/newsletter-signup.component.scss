@@ -1,0 +1,76 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.newsletter {
+  background-color: $color-primary-soft;
+}
+
+.newsletter__content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.newsletter__text {
+  text-align: center;
+}
+
+.newsletter__text p {
+  color: $color-text-secondary;
+}
+
+.newsletter__form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+/* input */
+.newsletter__form input {
+  padding: $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-border;
+  font-size: $font-size-base;
+}
+
+/* button */
+.newsletter__form button {
+  padding: $space-3;
+  border-radius: $radius-md;
+  border: none;
+  background-color: $color-primary;
+  color: $color-surface;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+}
+
+.newsletter__form button:hover {
+  background-color: $color-primary-hover;
+}
+
+/* tablet+ */
+@include respond-to(md) {
+  .newsletter__content {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .newsletter__text {
+    text-align: left;
+    max-width: 400px;
+  }
+
+  .newsletter__form {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .newsletter__form input {
+    min-width: 250px;
+  }
+}

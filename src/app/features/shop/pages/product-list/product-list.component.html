@@ -1,1 +1,31 @@
-<p>product-list works!</p>
+<section class="shop-page">
+  <div class="u-container">
+    <header class="shop-page__header">
+      <h1>Termékek</h1>
+      <p>Találd meg a számodra tökéletes alapanyagokat és kiegészítőket.</p>
+    </header>
+
+    <app-product-filter></app-product-filter>
+
+    <section class="shop-page__results" aria-labelledby="shop-results-title">
+      <h2 id="shop-results-title" class="u-visually-hidden">Terméklista</h2>
+
+      @if (isLoading) {
+        <app-loading-spinner></app-loading-spinner>
+      } @else if (!hasResults) {
+        <app-empty-state
+          title="Nincs találat"
+          description="A beállított szűrőknek megfelelően nem találtunk terméket."
+          actionLabel="Szűrők törlése"
+          actionLink="/shop">
+        </app-empty-state>
+      } @else {
+        <div class="shop-page__grid">
+          @for (product of products; track product) {
+            <app-product-card></app-product-card>
+          }
+        </div>
+      }
+    </section>
+  </div>
+</section>

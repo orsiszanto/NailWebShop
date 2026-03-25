@@ -1,1 +1,9 @@
-<p>empty-state works!</p>
+<section class="empty-state" aria-labelledby="empty-state-title">
+  <div class="empty-state__content">
+    <h2 id="empty-state-title">{{ title() }}</h2>
+    <p>{{ description() }}</p>
+    <a [routerLink]="actionLink()" class="empty-state__action">
+      {{ actionLabel() }}
+    </a>
+  </div>
+</section>

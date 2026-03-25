@@ -1,1 +1,26 @@
-<p>product-card works!</p>
+<article class="product-card">
+  <div class="product-card__image">
+    <span>{{ imageAlt() }}</span>
+  </div>
+
+  <div class="product-card__body">
+    <h3 class="product-card__title">{{ name() }}</h3>
+
+    <p class="product-card__price">
+      @if (oldPrice()) {
+        <span class="product-card__old-price">{{ oldPrice() }}</span>
+      }
+      <span class="product-card__current-price">{{ price() }}</span>
+    </p>
+
+    <div class="product-card__actions">
+      <button type="button" class="product-card__cart-button">
+        Kosárba
+      </button>
+
+      <a routerLink="/shop" class="product-card__details-link">
+        Részletek
+      </a>
+    </div>
+  </div>
+</article>

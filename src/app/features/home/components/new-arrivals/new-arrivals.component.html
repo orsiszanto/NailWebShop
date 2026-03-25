@@ -1,0 +1,38 @@
+<section class="new-arrivals u-section" aria-labelledby="new-arrivals-title">
+  <div class="u-container">
+    <div class="new-arrivals__header">
+      <h2 id="new-arrivals-title">Újdonságok</h2>
+
+      <a routerLink="/shop" [queryParams]="{ category: 'ujdonsagok' }">
+        Összes megtekintése
+      </a>
+    </div>
+
+    <div class="new-arrivals__grid">
+      <app-product-card
+        name="Builder Gel Pink"
+        price="3 990 Ft"
+        imageAlt="Builder Gel Pink"
+      ></app-product-card>
+
+      <app-product-card
+        name="Glossy Top Coat"
+        price="2 490 Ft"
+        oldPrice="2 990 Ft"
+        imageAlt="Glossy Top Coat"
+      ></app-product-card>
+
+      <app-product-card
+        name="Silver Nail Stickers"
+        price="1 990 Ft"
+        imageAlt="Silver Nail Stickers"
+      ></app-product-card>
+
+      <app-product-card
+        name="Cuticle Oil"
+        price="2 190 Ft"
+        imageAlt="Cuticle Oil"
+      ></app-product-card>
+    </div>
+  </div>
+</section>

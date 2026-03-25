@@ -1,0 +1,41 @@
+<section class="favorite-products u-section" aria-labelledby="favorite-products-title">
+  <div class="u-container">
+
+    <div class="favorite-products__header">
+      <h2 id="favorite-products-title">Kedvenc termékek</h2>
+
+      <a routerLink="/shop" [queryParams]="{ sort: 'popular' }">
+        Összes megtekintése
+      </a>
+    </div>
+
+    <div class="favorite-products__grid">
+
+      <article class="product-card">
+        <div class="product-card__image"></div>
+        <h3 class="product-card__title">Termék neve</h3>
+        <p class="product-card__price">3 990 Ft</p>
+      </article>
+
+      <article class="product-card">
+        <div class="product-card__image"></div>
+        <h3 class="product-card__title">Termék neve</h3>
+        <p class="product-card__price">2 490 Ft</p>
+      </article>
+
+      <article class="product-card">
+        <div class="product-card__image"></div>
+        <h3 class="product-card__title">Termék neve</h3>
+        <p class="product-card__price">4 290 Ft</p>
+      </article>
+
+      <article class="product-card">
+        <div class="product-card__image"></div>
+        <h3 class="product-card__title">Termék neve</h3>
+        <p class="product-card__price">3 190 Ft</p>
+      </article>
+
+    </div>
+
+  </div>
+</section>

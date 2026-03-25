@@ -1,0 +1,81 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+
+.hero {
+  background: $color-surface-alt;
+}
+
+.hero__content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  padding-block: $space-8;
+}
+
+.hero__text {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.hero__text h1 {
+  font-size: $font-size-2xl;
+}
+
+.hero__text p {
+  color: $color-text-secondary;
+}
+
+.hero__cta {
+  display: inline-block;
+  width: fit-content;
+  padding: $space-3 $space-5;
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-surface;
+  font-weight: $font-weight-semibold;
+  box-shadow: $shadow-sm;
+}
+
+.hero__cta:hover {
+  background-color: $color-primary-hover;
+}
+
+.hero__image img {
+  width: 100%;
+  border-radius: $radius-lg;
+  object-fit: cover;
+}
+
+/* TABLET */
+@include respond-to(md) {
+  .hero__content {
+    flex-direction: row;
+    align-items: center;
+    gap: $space-8;
+  }
+
+  .hero__text {
+    flex: 1;
+  }
+
+  .hero__image {
+    flex: 1;
+  }
+}
+
+/* DESKTOP */
+@include respond-to(lg) {
+  .hero__text h1 {
+    font-size: $font-size-3xl;
+  }
+
+  .hero__content {
+    padding-block: $space-9;
+  }
+}

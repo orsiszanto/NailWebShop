@@ -1,0 +1,35 @@
+<section class="featured-offers u-section" aria-labelledby="offers-title">
+  <div class="u-container">
+
+    <div class="featured-offers__header">
+      <h2 id="offers-title">Kiemelt ajánlatok</h2>
+
+      <a routerLink="/shop" [queryParams]="{ category: 'akciok' }">
+        Összes megtekintése
+      </a>
+    </div>
+
+    <div class="featured-offers__grid">
+
+      <article class="product-card product-card--highlight">
+        <div class="product-card__image"></div>
+        <h3 class="product-card__title">Termék neve</h3>
+        <p class="product-card__price">
+          <span class="product-card__old-price">4 990 Ft</span>
+          <span class="product-card__new-price">3 490 Ft</span>
+        </p>
+      </article>
+
+      <article class="product-card product-card--highlight">
+        <div class="product-card__image"></div>
+        <h3 class="product-card__title">Termék neve</h3>
+        <p class="product-card__price">
+          <span class="product-card__old-price">3 990 Ft</span>
+          <span class="product-card__new-price">2 990 Ft</span>
+        </p>
+      </article>
+
+    </div>
+
+  </div>
+</section>

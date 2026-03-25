@@ -1,0 +1,26 @@
+@use '../../../styles/tokens/spacing' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  display: block;
+  flex: 1;
+  padding-block: $space-7;
+}
+
+@include respond-to(md) {
+  main {
+    padding-block: $space-8;
+  }
+}
+
+@include respond-to(lg) {
+  main {
+    padding-block: $space-9;
+  }
+}

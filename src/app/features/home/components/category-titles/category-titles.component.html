@@ -1,0 +1,39 @@
+<section class="category-tiles u-section" aria-labelledby="category-title">
+  <div class="u-container">
+
+    <h2 id="category-title">Kategóriák</h2>
+
+    <div class="category-tiles__grid">
+
+      <a class="category-tile"
+         routerLink="/shop"
+         [queryParams]="{ category: 'ujdonsagok' }">
+        <h3>Újdonságok</h3>
+        <p>Legfrissebb termékek</p>
+      </a>
+
+      <a class="category-tile"
+         routerLink="/shop"
+         [queryParams]="{ category: 'alapanyagok' }">
+        <h3>Alapanyagok</h3>
+        <p>Minden a tökéletes alaphoz</p>
+      </a>
+
+      <a class="category-tile"
+         routerLink="/shop"
+         [queryParams]="{ category: 'lakkok' }">
+        <h3>Lakkok</h3>
+        <p>Színek és géllakkok</p>
+      </a>
+
+      <a class="category-tile"
+         routerLink="/shop"
+         [queryParams]="{ category: 'diszitok' }">
+        <h3>Díszítők</h3>
+        <p>Kreatív kiegészítők</p>
+      </a>
+
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,46 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.usp-section h2 {
+  text-align: center;
+  margin-bottom: $space-6;
+}
+
+.usp-section__grid {
+  display: grid;
+  gap: $space-4;
+}
+
+.usp-card {
+  padding: $space-5;
+  border-radius: $radius-lg;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+}
+
+.usp-card h3 {
+  margin-bottom: $space-2;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+}
+
+.usp-card p {
+  margin-bottom: 0;
+  color: $color-text-secondary;
+}
+
+@include respond-to(md) {
+  .usp-section__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include respond-to(lg) {
+  .usp-section__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

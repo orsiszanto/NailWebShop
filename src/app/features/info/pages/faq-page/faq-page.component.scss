@@ -1,0 +1,24 @@
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/tokens/colors' as *;
+
+.info-page {
+  padding-block: $space-8;
+}
+
+.info-page h1 {
+  margin-bottom: $space-6;
+}
+
+.info-page__content p {
+  margin-bottom: $space-3;
+}
+
+.faq article {
+  margin-bottom: $space-6;
+}
+
+.faq h2 {
+  margin-bottom: $space-2;
+  font-size: $font-size-lg;
+}

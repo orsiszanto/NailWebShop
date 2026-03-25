@@ -1,0 +1,55 @@
+@use '../../../../styles/tokens/colors' as *;
+@use '../../../../styles/tokens/spacing' as *;
+@use '../../../../styles/tokens/typography' as *;
+@use '../../../../styles/tokens/radius' as *;
+@use '../../../../styles/tokens/shadows' as *;
+
+.search-input {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  gap: $space-2;
+}
+
+.search-input__field {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding-inline: $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background-color: $color-surface;
+  color: $color-text-primary;
+  font-size: $font-size-sm;
+}
+
+.search-input__field::placeholder {
+  color: $color-text-muted;
+}
+
+.search-input__field:hover {
+  border-color: $color-border-strong;
+}
+
+.search-input__field:focus {
+  border-color: $color-accent;
+  outline: none;
+}
+
+.search-input__button {
+  min-height: 44px;
+  padding-inline: $space-4;
+  border: 1px solid $color-primary;
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-surface;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  box-shadow: $shadow-sm;
+}
+
+.search-input__button:hover {
+  background-color: $color-primary-hover;
+  border-color: $color-primary-hover;
+}

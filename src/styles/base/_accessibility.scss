@@ -1,0 +1,21 @@
+@use '../tokens/colors' as *;
+@use '../tokens/spacing' as *;
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  padding: $space-2 $space-4;
+  background: $color-text-primary;
+  color: $color-surface;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+:focus-visible {
+  outline: 3px solid $color-accent;
+  outline-offset: 2px;
+}

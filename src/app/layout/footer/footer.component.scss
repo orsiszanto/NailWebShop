@@ -1,0 +1,58 @@
+@use '../../../styles/tokens/colors' as *;
+@use '../../../styles/tokens/spacing' as *;
+@use '../../../styles/tokens/typography' as *;
+@use '../../../styles/abstracts/mixins' as *;
+
+.site-footer {
+  margin-top: $space-10;
+  padding-block: $space-8;
+  background-color: $color-surface-alt;
+  border-top: 1px solid $color-border;
+  color: $color-text-secondary;
+}
+
+.site-footer__content {
+  display: grid;
+  gap: $space-7;
+}
+
+.site-footer h2 {
+  margin-bottom: $space-3;
+  font-size: $font-size-lg;
+  color: $color-text-primary;
+}
+
+.site-footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-footer li + li {
+  margin-top: $space-2;
+}
+
+.site-footer a {
+  color: $color-text-primary;
+}
+
+.site-footer a:hover {
+  text-decoration: underline;
+}
+
+.site-footer p {
+  margin-bottom: $space-2;
+}
+
+@include respond-to(md) {
+  .site-footer__content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include respond-to(lg) {
+  .site-footer__content {
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-8;
+  }
+}

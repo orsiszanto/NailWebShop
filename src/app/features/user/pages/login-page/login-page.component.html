@@ -1,0 +1,79 @@
+<section class="auth-page">
+  <div class="u-container auth-page__content">
+
+    <div class="auth-page__intro">
+      <p class="auth-page__eyebrow">Nailshop</p>
+      <h1>Üdv újra!</h1>
+      <p class="auth-page__description">
+        Jelentkezz be, és érd el kedvenc termékeidet, rendeléseidet és a személyre szabott vásárlási élményt.
+      </p>
+
+      <div class="auth-page__highlights">
+        <div class="auth-page__highlight">
+          <h2>Gyors rendeléskezelés</h2>
+          <p>Tekintsd meg korábbi rendeléseidet és vásárolj kényelmesen.</p>
+        </div>
+
+        <div class="auth-page__highlight">
+          <h2>Prémium termékek</h2>
+          <p>Minőségi körmös alapanyagok és kiegészítők egy helyen.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-card__header">
+        <h2>Bejelentkezés</h2>
+        <p>Lépj be a fiókodba az email címeddel és jelszavaddal.</p>
+      </div>
+
+      <form class="auth-form" novalidate>
+        <div class="auth-form__field">
+          <label for="login-email">Email cím</label>
+          <input
+            id="login-email"
+            type="email"
+            name="email"
+            autocomplete="email"
+            placeholder="pelda@email.com"
+          />
+          <p class="auth-form__hint">Ide fog majd kerülni az email validáció üzenete.</p>
+        </div>
+
+        <div class="auth-form__field">
+          <div class="auth-form__label-row">
+            <label for="login-password">Jelszó</label>
+            <span class="auth-form__secondary-link">
+              Elfelejtetted a jelszavad?
+            </span>
+          </div>
+
+          <input
+            id="login-password"
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+          />
+          <p class="auth-form__hint">Ide fog majd kerülni a jelszó validáció üzenete.</p>
+        </div>
+
+        <div class="auth-form__error" aria-live="polite">
+          Itt fog megjelenni az általános hibaüzenet.
+        </div>
+
+        <button type="submit" class="auth-form__submit">
+          Bejelentkezés
+        </button>
+      </form>
+
+      <div class="auth-card__footer">
+        <p>
+          Még nincs fiókod?
+          <a routerLink="/user/register">Regisztráció</a>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>

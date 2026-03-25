@@ -1,0 +1,59 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.product-search {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  width: 100%;
+}
+
+.product-search__input {
+  width: 100%;
+  min-height: 44px;
+  padding: $space-3 $space-4;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background-color: $color-surface;
+  color: $color-text-primary;
+  font-size: $font-size-base;
+}
+
+.product-search__input::placeholder {
+  color: $color-text-muted;
+}
+
+.product-search__input:focus {
+  outline: none;
+  border-color: $color-accent;
+}
+
+.product-search__button {
+  min-height: 44px;
+  padding: $space-3 $space-4;
+  border: none;
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-surface;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+}
+
+.product-search__button:hover {
+  background-color: $color-primary-hover;
+}
+
+@include respond-to(md) {
+  .product-search {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .product-search__input {
+    flex: 1;
+  }
+}

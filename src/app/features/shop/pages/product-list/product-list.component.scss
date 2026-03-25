@@ -1,0 +1,55 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.shop-page {
+  display: block;
+}
+
+.shop-page__header {
+  margin-bottom: $space-6;
+}
+
+.shop-page__header h1 {
+  margin-bottom: $space-2;
+  font-size: $font-size-2xl;
+}
+
+.shop-page__header p {
+  margin-bottom: 0;
+  color: $color-text-secondary;
+}
+
+/* FILTER spacing */
+app-product-filter {
+  display: block;
+  margin-bottom: $space-7;
+}
+
+/* GRID */
+.shop-page__grid {
+  display: grid;
+  gap: $space-4;
+}
+
+/* 📱 mobil */
+.shop-page__grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 📱 tablet */
+@include respond-to(md) {
+  .shop-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: $space-5;
+  }
+}
+
+/* 💻 desktop */
+@include respond-to(lg) {
+  .shop-page__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: $space-6;
+  }
+}

@@ -1,19 +1,18 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
 
-img, picture {
+img,
+picture {
   max-width: 100%;
   display: block;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font: inherit;
 }

@@ -1,0 +1,46 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.category-tiles__grid {
+  display: grid;
+  gap: $space-4;
+}
+
+.category-tile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: $space-2;
+
+  padding: $space-6;
+  border-radius: $radius-lg;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+
+  text-decoration: none;
+  color: $color-text-primary;
+
+  min-height: 120px;
+}
+
+.category-tile:hover {
+  box-shadow: $shadow-md;
+  transform: translateY(-2px);
+}
+
+/* tablet */
+@include respond-to(md) {
+  .category-tiles__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* desktop */
+@include respond-to(lg) {
+  .category-tiles__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
