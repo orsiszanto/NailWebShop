@@ -1,1 +1,38 @@
-<p>add-to-cart works!</p>
+<div class="add-to-cart">
+  <div class="add-to-cart__controls" aria-label="Mennyiség kiválasztása">
+    <button
+      type="button"
+      class="add-to-cart__stepper-button"
+      (click)="decreaseQuantity()"
+      [disabled]="quantity <= minQuantity()"
+      aria-label="Mennyiség csökkentése">
+      −
+    </button>
+
+    <span class="add-to-cart__quantity" aria-live="polite">
+      {{ quantity }}
+    </span>
+
+    <button
+      type="button"
+      class="add-to-cart__stepper-button"
+      (click)="increaseQuantity()"
+      [disabled]="quantity >= maxQuantity()"
+      aria-label="Mennyiség növelése">
+      +
+    </button>
+  </div>
+
+  <button
+    type="button"
+    class="add-to-cart__button"
+    (click)="addToCart()">
+    Kosárba
+  </button>
+
+  @if (addedMessageVisible) {
+    <p class="add-to-cart__feedback" aria-live="polite">
+      A termék a kosárba került.
+    </p>
+  }
+</div>

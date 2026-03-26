@@ -1,0 +1,43 @@
+<main class="checkout-page">
+  <div class="u-container">
+    <app-page-title>Pénztár</app-page-title>
+
+    @if (items().length === 0) {
+      <div class="checkout-empty">
+        <h2>A pénztár jelenleg üres</h2>
+        <p>Először tegyél termékeket a kosárba.</p>
+        <a routerLink="/shop" class="checkout-empty__link">Vissza a shophoz</a>
+      </div>
+    } @else {
+      <div class="checkout-layout">
+        <section class="checkout-form">
+          <h2>Szállítási adatok</h2>
+          <p>Itt lesz majd a checkout űrlap.</p>
+        </section>
+
+        <aside class="checkout-summary">
+          <h2>Rendelés összegzése</h2>
+
+          <div class="checkout-summary__row">
+            <span>Termékek ({{ totalItems() }} db)</span>
+            <strong>{{ totalPrice() }} Ft</strong>
+          </div>
+
+          <div class="checkout-summary__row">
+            <span>Szállítás</span>
+            <strong>Ingyenes</strong>
+          </div>
+
+          <div class="checkout-summary__total">
+            <span>Összesen</span>
+            <strong>{{ totalPrice() }} Ft</strong>
+          </div>
+
+          <a routerLink="/cart" class="checkout-summary__back">
+            Vissza a kosárhoz
+          </a>
+        </aside>
+      </div>
+    }
+  </div>
+</main>

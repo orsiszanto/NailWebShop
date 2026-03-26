@@ -1,19 +1,30 @@
 <header class="site-header">
   <div class="u-container site-header__content">
+    <!-- MOBILE -->
     <div class="site-header__mobile">
       <a class="site-header__logo" routerLink="/" (click)="closeMenu()">Nailshop</a>
 
       <div class="site-header__mobile-actions">
-        <button type="button" aria-label="Keresés megnyitása">
+        <a
+          class="site-header__mobile-action"
+          routerLink="/shop"
+          aria-label="Keresés és termékek megnyitása"
+          (click)="closeMenu()">
           Keresés
-        </button>
+        </a>
 
-        <button type="button" aria-label="Kosár megnyitása">
+        <a
+          class="site-header__mobile-action"
+          routerLink="/cart"
+          routerLinkActive="is-active"
+          aria-label="Kosár megnyitása"
+          (click)="closeMenu()">
           Kosár
-        </button>
+        </a>
 
         <button
           type="button"
+          class="site-header__mobile-action"
           aria-label="Menü megnyitása"
           aria-controls="mobile-menu"
           [attr.aria-expanded]="isMenuOpen"
@@ -23,6 +34,7 @@
       </div>
     </div>
 
+    <!-- DESKTOP -->
     <div class="site-header__desktop">
       <a class="site-header__logo" routerLink="/">Nailshop</a>
 
@@ -31,32 +43,46 @@
       </div>
 
       <nav class="site-header__nav" aria-label="Fő navigáció">
-        <a routerLink="/shop" [queryParams]="{ category: 'ujdonsagok' }">
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'ujdonsagok' }"
+          routerLinkActive="is-active">
           Újdonságok
         </a>
 
-        <a routerLink="/shop" [queryParams]="{ category: 'alapanyagok' }">
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'alapanyagok' }"
+          routerLinkActive="is-active">
           Alapanyagok
         </a>
 
-        <a routerLink="/shop" [queryParams]="{ category: 'lakkok' }">
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'lakkok' }"
+          routerLinkActive="is-active">
           Lakkok
         </a>
 
-        <a routerLink="/shop" [queryParams]="{ category: 'diszitok' }">
+        <a
+          routerLink="/shop"
+          [queryParams]="{ category: 'diszitok' }"
+          routerLinkActive="is-active">
           Díszítők
         </a>
       </nav>
 
-      <button
+      <a
         class="site-header__cart-button"
-        type="button"
+        routerLink="/cart"
+        routerLinkActive="is-active"
         aria-label="Kosár megnyitása">
         Kosár
-      </button>
+      </a>
     </div>
   </div>
 
+  <!-- MOBILE MENU -->
   <div
     *ngIf="isMenuOpen"
     class="mobile-menu"
@@ -76,6 +102,7 @@
         <a
           routerLink="/shop"
           [queryParams]="{ category: 'ujdonsagok' }"
+          routerLinkActive="is-active"
           (click)="closeMenu()">
           Újdonságok
         </a>
@@ -83,6 +110,7 @@
         <a
           routerLink="/shop"
           [queryParams]="{ category: 'alapanyagok' }"
+          routerLinkActive="is-active"
           (click)="closeMenu()">
           Alapanyagok
         </a>
@@ -90,6 +118,7 @@
         <a
           routerLink="/shop"
           [queryParams]="{ category: 'lakkok' }"
+          routerLinkActive="is-active"
           (click)="closeMenu()">
           Lakkok
         </a>
@@ -97,8 +126,16 @@
         <a
           routerLink="/shop"
           [queryParams]="{ category: 'diszitok' }"
+          routerLinkActive="is-active"
           (click)="closeMenu()">
           Díszítők
+        </a>
+
+        <a
+          routerLink="/cart"
+          routerLinkActive="is-active"
+          (click)="closeMenu()">
+          Kosár
         </a>
       </nav>
 

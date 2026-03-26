@@ -1,62 +1,59 @@
 <section class="product-filter" aria-labelledby="product-filter-title">
-
-  <!-- HEADER -->
-  <div 
+  <div
     class="product-filter__header"
     (click)="toggle()"
+    (keydown.enter)="toggle()"
+    (keydown.space)="toggle()"
     role="button"
     tabindex="0"
-    [attr.aria-expanded]="isOpen"
-  >
+    [attr.aria-expanded]="isOpen">
     <h2 id="product-filter-title">Szűrés és rendezés</h2>
 
-    <span 
+    <span
       class="product-filter__toggle"
-      [class.is-open]="isOpen"
-    >
+      [class.is-open]="isOpen">
       +
     </span>
   </div>
 
-  <!-- COLLAPSIBLE CONTENT -->
-  <div 
+  <div
     class="product-filter__content"
-    [class.is-open]="isOpen"
-  >
-
+    [class.is-open]="isOpen">
     <div class="product-filter__inner">
-
-      <div class="product-filter__search">
-        <app-product-search></app-product-search>
-      </div>
-
       <div class="product-filter__controls">
-
         <div class="product-filter__field">
           <label for="category">Kategória</label>
-          <select id="category">
+          <select
+            id="category"
+            [(ngModel)]="category"
+            name="category">
             <option value="">Összes kategória</option>
             <option value="alapanyagok">Alapanyagok</option>
             <option value="lakkok">Lakkok</option>
             <option value="diszitok">Díszítők</option>
-            <option value="ujdonsagok">Újdonságok</option>
+            <option value="eszkozok">Eszközök</option>
           </select>
         </div>
 
         <div class="product-filter__field">
           <label for="brand">Márka</label>
-          <select id="brand">
+          <select
+            id="brand"
+            [(ngModel)]="brand"
+            name="brand">
             <option value="">Összes márka</option>
-            <option value="cnd">CND</option>
+            <option value="crystal-nails">Crystal Nails</option>
             <option value="moyra">Moyra</option>
             <option value="indigo">Indigo</option>
-            <option value="crystal-nails">Crystal Nails</option>
           </select>
         </div>
 
         <div class="product-filter__field">
           <label for="price">Ár</label>
-          <select id="price">
+          <select
+            id="price"
+            [(ngModel)]="priceRange"
+            name="price">
             <option value="">Bármilyen ár</option>
             <option value="0-3000">0 – 3 000 Ft</option>
             <option value="3000-6000">3 000 – 6 000 Ft</option>
@@ -66,35 +63,52 @@
 
         <div class="product-filter__field">
           <label for="sort">Rendezés</label>
-          <select id="sort">
+          <select
+            id="sort"
+            [(ngModel)]="sortBy"
+            name="sort">
             <option value="newest">Legújabb</option>
+            <option value="name">Név szerint</option>
             <option value="price-asc">Ár szerint növekvő</option>
             <option value="price-desc">Ár szerint csökkenő</option>
             <option value="popular">Népszerű</option>
           </select>
         </div>
-
       </div>
 
       <div class="product-filter__options">
         <label class="product-filter__checkbox">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [(ngModel)]="onSaleOnly"
+            name="onSaleOnly" />
           <span>Csak akciós</span>
         </label>
 
         <label class="product-filter__checkbox">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [(ngModel)]="inStockOnly"
+            name="inStockOnly" />
           <span>Csak készleten</span>
         </label>
       </div>
 
       <div class="product-filter__actions">
-        <button type="button" class="product-filter__apply-button">
+        <button
+          type="button"
+          class="product-filter__secondary-button"
+          (click)="clearFilters()">
+          Szűrők törlése
+        </button>
+
+        <button
+          type="button"
+          class="product-filter__apply-button"
+          (click)="applyFilters()">
           Szűrés alkalmazása
         </button>
       </div>
-
     </div>
   </div>
-
 </section>

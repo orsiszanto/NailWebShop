@@ -1,0 +1,95 @@
+@use '../../../../styles/tokens/colors' as *;
+@use '../../../../styles/tokens/spacing' as *;
+@use '../../../../styles/tokens/typography' as *;
+@use '../../../../styles/tokens/radius' as *;
+@use '../../../../styles/tokens/shadows' as *;
+@use '../../../../styles/abstracts/mixins' as *;
+
+.not-found {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.not-found__content {
+  text-align: center;
+  max-width: 520px;
+  margin-inline: auto;
+}
+
+/* 404 szám */
+.not-found__code {
+  font-size: 6rem;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+  margin-bottom: $space-2;
+}
+
+/* cím */
+.not-found__title {
+  margin-bottom: $space-3;
+}
+
+/* leírás */
+.not-found__description {
+  color: $color-text-secondary;
+  margin-bottom: $space-6;
+}
+
+/* gombok */
+.not-found__actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+/* primary CTA */
+.not-found__primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 48px;
+  padding: $space-3 $space-5;
+
+  border-radius: $radius-md;
+  background-color: $color-primary;
+  color: $color-surface;
+
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+
+  box-shadow: $shadow-sm;
+}
+
+.not-found__primary:hover {
+  background-color: $color-primary-hover;
+}
+
+/* secondary link */
+.not-found__secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+
+  text-decoration: none;
+}
+
+.not-found__secondary:hover {
+  text-decoration: underline;
+}
+
+/* desktop */
+@include respond-to(md) {
+  .not-found__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}

@@ -1,1 +1,85 @@
-<p>cart-item works!</p>
+<article class="cart-item">
+  
+  <!-- IMAGE -->
+  <a
+    class="cart-item__image-link"
+    [routerLink]="['/shop', item().productId]"
+  >
+    <div class="cart-item__image">
+      <span>{{ item().product.imageAlt }}</span>
+    </div>
+  </a>
+
+  <!-- MAIN CONTENT -->
+  <div class="cart-item__main">
+
+    <!-- INFO -->
+    <div class="cart-item__info">
+      <h4 class="cart-item__title">
+        <a [routerLink]="['/shop', item().productId]">
+          {{ item().product.name }}
+        </a>
+      </h4>
+
+      <div class="cart-item__price-block">
+        <span class="cart-item__unit-price">
+          {{ item().unitPrice }} Ft
+        </span>
+
+        @if (item().product.oldPrice) {
+          <span class="cart-item__old-price">
+            {{ item().product.oldPrice }} Ft
+          </span>
+        }
+      </div>
+    </div>
+
+    <!-- META (quantity + subtotal + remove) -->
+    <div class="cart-item__meta">
+
+      <!-- QUANTITY -->
+      <div class="cart-item__quantity" aria-label="Mennyiség">
+        <button
+          type="button"
+          class="cart-item__quantity-btn"
+          (click)="decrease()"
+          [disabled]="item().quantity <= 1"
+        >
+          −
+        </button>
+
+        <input
+          type="number"
+          class="cart-item__quantity-input"
+          [value]="item().quantity"
+          (input)="onManualInput($any($event.target).value)"
+          min="1"
+        />
+
+        <button
+          type="button"
+          class="cart-item__quantity-btn"
+          (click)="increase()"
+        >
+          +
+        </button>
+      </div>
+
+      <!-- SUBTOTAL -->
+      <div class="cart-item__subtotal">
+        <span class="cart-item__subtotal-label">Összesen</span>
+        <strong>{{ item().subtotal }} Ft</strong>
+      </div>
+
+      <!-- REMOVE -->
+      <button
+        type="button"
+        class="cart-item__remove"
+        (click)="remove()"
+      >
+        Törlés
+      </button>
+
+    </div>
+  </div>
+</article>

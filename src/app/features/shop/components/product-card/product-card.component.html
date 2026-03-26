@@ -1,24 +1,33 @@
 <article class="product-card">
-  <div class="product-card__image">
-    <span>{{ imageAlt() }}</span>
-  </div>
+  <a class="product-card__image-link" [routerLink]="['/shop', productId()]">
+    <div class="product-card__image">
+      <span>{{ imageAlt() }}</span>
+    </div>
+  </a>
 
   <div class="product-card__body">
-    <h3 class="product-card__title">{{ name() }}</h3>
+    <h3 class="product-card__title">
+      <a [routerLink]="['/shop', productId()]">
+        {{ name() }}
+      </a>
+    </h3>
 
     <p class="product-card__price">
-      @if (oldPrice()) {
-        <span class="product-card__old-price">{{ oldPrice() }}</span>
+      @if (oldPrice() !== null) {
+        <span class="product-card__old-price">{{ formatPrice(oldPrice()) }}</span>
       }
-      <span class="product-card__current-price">{{ price() }}</span>
+      <span class="product-card__current-price">{{ formatPrice(price()) }}</span>
     </p>
 
     <div class="product-card__actions">
-      <button type="button" class="product-card__cart-button">
+      <button
+        type="button"
+        class="product-card__cart-button"
+        (click)="addToCart()">
         Kosárba
       </button>
 
-      <a routerLink="/shop" class="product-card__details-link">
+      <a [routerLink]="['/shop', productId()]" class="product-card__details-link">
         Részletek
       </a>
     </div>

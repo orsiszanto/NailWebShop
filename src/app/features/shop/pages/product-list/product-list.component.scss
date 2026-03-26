@@ -21,24 +21,21 @@
   color: $color-text-secondary;
 }
 
-/* FILTER spacing */
+.shop-page__search {
+  margin-bottom: $space-5;
+}
+
 app-product-filter {
   display: block;
   margin-bottom: $space-7;
 }
 
-/* GRID */
 .shop-page__grid {
   display: grid;
   gap: $space-4;
-}
-
-/* 📱 mobil */
-.shop-page__grid {
   grid-template-columns: repeat(2, 1fr);
 }
 
-/* 📱 tablet */
 @include respond-to(md) {
   .shop-page__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -46,7 +43,6 @@ app-product-filter {
   }
 }
 
-/* 💻 desktop */
 @include respond-to(lg) {
   .shop-page__grid {
     grid-template-columns: repeat(4, 1fr);

@@ -27,6 +27,10 @@
   text-decoration: none;
 }
 
+.site-header__logo:hover {
+  color: $color-primary;
+}
+
 .site-header__mobile {
   display: flex;
   align-items: center;
@@ -40,7 +44,10 @@
   gap: $space-2;
 }
 
-.site-header__mobile-actions button {
+.site-header__mobile-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-width: 44px;
   min-height: 44px;
   padding: $space-2 $space-3;
@@ -50,11 +57,18 @@
   color: $color-text-primary;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.site-header__mobile-actions button:hover {
+.site-header__mobile-action:hover {
   background-color: $color-surface-alt;
+}
+
+.site-header__mobile-action.is-active {
+  border-color: $color-primary;
+  background-color: $color-primary-soft;
+  color: $color-primary;
 }
 
 .site-header__desktop {
@@ -114,10 +128,16 @@
   font-size: $font-size-md;
   font-weight: $font-weight-medium;
   text-decoration: none;
+  border-radius: $radius-md;
 }
 
 .mobile-menu__nav a:hover {
   color: $color-primary;
+}
+
+.mobile-menu__nav a.is-active {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
 }
 
 .mobile-menu__auth {
@@ -182,13 +202,23 @@
     font-size: $font-size-sm;
     font-weight: $font-weight-medium;
     text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s ease, border-color 0.2s ease;
   }
 
   .site-header__nav a:hover {
     color: $color-primary;
   }
 
+  .site-header__nav a.is-active {
+    color: $color-primary;
+    border-bottom-color: $color-primary;
+  }
+
   .site-header__cart-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-height: 44px;
     padding: $space-2 $space-4;
     border: 1px solid $color-border;
@@ -197,10 +227,17 @@
     color: $color-text-primary;
     font-size: $font-size-sm;
     font-weight: $font-weight-semibold;
+    text-decoration: none;
     cursor: pointer;
   }
 
   .site-header__cart-button:hover {
     background-color: $color-surface-alt;
+  }
+
+  .site-header__cart-button.is-active {
+    border-color: $color-primary;
+    background-color: $color-primary-soft;
+    color: $color-primary;
   }
 }

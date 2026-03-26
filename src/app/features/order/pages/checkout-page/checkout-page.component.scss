@@ -1,0 +1,93 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.checkout-page {
+  padding-block: $space-6 $space-8;
+  background-color: $color-background;
+}
+
+.checkout-empty,
+.checkout-form,
+.checkout-summary {
+  padding: $space-5;
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  background-color: $color-surface;
+  box-shadow: $shadow-sm;
+}
+
+.checkout-empty {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.checkout-empty h2,
+.checkout-form h2,
+.checkout-summary h2 {
+  margin: 0 0 $space-3 0;
+}
+
+.checkout-empty__link,
+.checkout-summary__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  text-decoration: none;
+}
+
+.checkout-empty__link {
+  width: fit-content;
+  background-color: $color-primary;
+  color: $color-surface;
+}
+
+.checkout-summary__back {
+  border: 1px solid $color-border;
+  color: $color-text-primary;
+  background-color: $color-surface;
+}
+
+.checkout-layout {
+  display: grid;
+  gap: $space-5;
+}
+
+.checkout-summary {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.checkout-summary__row,
+.checkout-summary__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.checkout-summary__total {
+  padding-top: $space-3;
+  border-top: 1px solid $color-border;
+  font-size: $font-size-md;
+}
+
+@include respond-to(lg) {
+  .checkout-layout {
+    grid-template-columns: minmax(0, 1.7fr) minmax(320px, 400px);
+    align-items: start;
+  }
+
+  .checkout-summary {
+    position: sticky;
+    top: $space-6;
+  }
+}

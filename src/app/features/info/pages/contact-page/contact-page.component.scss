@@ -1,6 +1,6 @@
-@use '../../../../styles/tokens/spacing' as *;
-@use '../../../../styles/tokens/typography' as *;
-@use '../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/tokens/colors' as *;
 
 .info-page {
   padding-block: $space-8;

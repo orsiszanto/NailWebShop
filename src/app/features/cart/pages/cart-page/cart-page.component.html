@@ -1,1 +1,44 @@
-<p>cart-page works!</p>
+<main class="cart-page">
+  <div class="u-container">
+    <app-page-title>Kosár</app-page-title>
+
+    @if (items().length === 0) {
+      <div class="cart-empty">
+        <h2>A kosár üres</h2>
+        <p>Nincs termék a kosárban.</p>
+        <a routerLink="/shop" class="cart-empty__shop-link">Vásárlás folytatása</a>
+      </div>
+    } @else {
+      <div class="cart-content">
+        <div class="cart-items">
+          @for (item of items(); track item.id) {
+            <app-cart-item [item]="item" />
+          }
+        </div>
+
+        <div class="cart-summary">
+          <div class="cart-summary__content">
+            <h3>Kosár összesítő</h3>
+            <div class="cart-summary__row">
+              <span>Termékek ({{ totalItems() }} db):</span>
+              <span>{{ totalPrice() }} Ft</span>
+            </div>
+            <div class="cart-summary__row cart-summary__total">
+              <span>Összesen:</span>
+              <span>{{ totalPrice() }} Ft</span>
+            </div>
+          </div>
+
+          <div class="cart-summary__actions">
+            <button type="button" class="cart-summary__clear" (click)="clearCart()">
+              Kosár ürítése
+            </button>
+            <a routerLink="/checkout" class="cart-summary__checkout">
+              Tovább a pénztárhoz
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</main>

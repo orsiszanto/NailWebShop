@@ -15,7 +15,6 @@
   box-shadow: $shadow-sm;
 }
 
-/* HEADER */
 .product-filter__header {
   display: flex;
   align-items: center;
@@ -28,7 +27,6 @@
   font-size: $font-size-lg;
 }
 
-/* TOGGLE ICON ANIMATION */
 .product-filter__toggle {
   font-size: $font-size-lg;
   font-weight: bold;
@@ -36,25 +34,23 @@
 }
 
 .product-filter__toggle.is-open {
-  transform: rotate(45deg); // + → x
+  transform: rotate(45deg);
 }
 
-/* COLLAPSIBLE ANIMATION */
 .product-filter__content {
   overflow: hidden;
   max-height: 0;
   opacity: 0;
-  transition: 
+  transition:
     max-height 0.4s ease,
     opacity 0.3s ease;
 }
 
 .product-filter__content.is-open {
-  max-height: 1000px; // elég nagy legyen
+  max-height: 1200px;
   opacity: 1;
 }
 
-/* INNER CONTENT */
 .product-filter__inner {
   display: flex;
   flex-direction: column;
@@ -62,7 +58,6 @@
   margin-top: $space-4;
 }
 
-/* FIELDS */
 .product-filter__controls {
   display: grid;
   gap: $space-4;
@@ -85,6 +80,7 @@
   border: 1px solid $color-border;
   border-radius: $radius-md;
   background-color: $color-surface;
+  color: $color-text-primary;
 }
 
 .product-filter__field select:focus {
@@ -92,7 +88,6 @@
   border-color: $color-accent;
 }
 
-/* CHECKBOX */
 .product-filter__options {
   display: flex;
   flex-direction: column;
@@ -106,32 +101,53 @@
   min-height: 44px;
 }
 
-/* BUTTON */
+.product-filter__actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.product-filter__secondary-button,
 .product-filter__apply-button {
   min-height: 44px;
   padding: $space-3 $space-5;
-  border: none;
   border-radius: $radius-md;
-  background-color: $color-primary;
-  color: $color-surface;
   font-weight: $font-weight-semibold;
   cursor: pointer;
+}
+
+.product-filter__secondary-button {
+  border: 1px solid $color-border;
+  background-color: $color-surface;
+  color: $color-text-primary;
+}
+
+.product-filter__secondary-button:hover {
+  background-color: $color-surface-alt;
+}
+
+.product-filter__apply-button {
+  border: none;
+  background-color: $color-primary;
+  color: $color-surface;
 }
 
 .product-filter__apply-button:hover {
   background-color: $color-primary-hover;
 }
 
-/* RESPONSIVE */
 @include respond-to(md) {
   .product-filter__controls {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .product-filter__actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }
 
 @include respond-to(lg) {
-
-  /* desktopon mindig látszódjon */
   .product-filter__content {
     max-height: none;
     opacity: 1;

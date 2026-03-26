@@ -8,8 +8,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        pathMatch: 'full',
         loadComponent: () =>
-          import('./features/home/home-page.component').then((m) => m.HomePageComponent),
+          import('./features/home/home-page.component').then(
+            (m) => m.HomePageComponent
+          ),
       },
       {
         path: 'shop',
@@ -17,9 +20,16 @@ export const routes: Routes = [
           import('./features/shop/shop.routes').then((m) => m.SHOP_ROUTES),
       },
       {
-        path: 'user',
+        path: 'cart',
         loadChildren: () =>
-          import('./features/user/user.routes').then((m) => m.USER_ROUTES),
+          import('./features/cart/cart.routes').then((m) => m.CART_ROUTES),
+      },
+      {
+        path: 'checkout',
+        loadComponent: () =>
+          import('./features/order/pages/checkout-page/checkout-page.component').then(
+            (m) => m.CheckoutPageComponent
+          ),
       },
       {
         path: '',

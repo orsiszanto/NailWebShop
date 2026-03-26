@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { NgIf } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SearchInputComponent } from '../../shared/components/search-input/search-input.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [NgIf, RouterLink, SearchInputComponent],
+  imports: [NgIf, RouterLink, RouterLinkActive, SearchInputComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

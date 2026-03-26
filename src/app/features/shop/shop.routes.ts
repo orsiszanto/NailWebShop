@@ -8,4 +8,11 @@ export const SHOP_ROUTES: Routes = [
         (m) => m.ProductListComponent
       ),
   },
+  {
+    path: ':id',
+    loadComponent: () =>
+      import('./pages/product-detail/product-detail.component').then(
+        (m) => m.ProductDetailComponent
+      ),
+  }
 ];

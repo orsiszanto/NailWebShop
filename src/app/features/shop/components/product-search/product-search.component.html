@@ -9,12 +9,15 @@
     type="search"
     placeholder="Keresés terméknév alapján"
     aria-label="Keresés terméknév alapján"
+    [(ngModel)]="searchTerm"
+    (keydown.enter)="onSearch()"
   />
 
   <button
     class="product-search__button"
     type="button"
-    aria-label="Keresés indítása">
+    aria-label="Keresés indítása"
+    (click)="onSearch()">
     Keresés
   </button>
 </div>

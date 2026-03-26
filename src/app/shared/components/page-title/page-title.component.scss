@@ -1,0 +1,11 @@
+@use '../../../../styles/tokens/spacing' as *;
+@use '../../../../styles/tokens/typography' as *;
+
+.page-title {
+  margin-bottom: $space-5;
+}
+
+.page-title__heading {
+  margin: 0;
+  font-size: clamp($font-size-xl, 3vw, $font-size-2xl);
+}
