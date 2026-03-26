@@ -19,51 +19,79 @@ Az alábbi fa a fő komponensek hierarchikus felépítését mutatja.
 AppComponent
 │
 ├── Layout
-│   ├── HeaderComponent
-│   ├── NavigationComponent
-│   └── FooterComponent
+│   ├── ShellComponent
+│   │   ├── HeaderComponent
+│   │   ├── TopBarComponent
+│   │   └── FooterComponent
 │
-├── HomePageComponent
+├── Home
+│   ├── HomePageComponent
+│   └── Components (home specifikus komponensek)
 │
 ├── Shop
-│   ├── ProductListComponent
+│   ├── ShopRoutes
+│   ├── Pages
+│   │   ├── ProductListComponent
+│   │   └── ProductDetailComponent
+│   ├── Components
+│   │   ├── AddToCartComponent
+│   │   ├── ProductCardComponent
 │   │   ├── ProductFilterComponent
-│   │   ├── ProductSearchComponent
-│   │   └── ProductCardComponent
-│   │
-│   └── ProductDetailComponent
-│       ├── ProductGalleryComponent
-│       └── AddToCartComponent
+│   │   ├── ProductGalleryComponent
+│   │   └── ProductSearchComponent
+│   └── DataAccess
+│       ├── CategoryService
+│       ├── ProductService
+│       └── ShopStore
 │
 ├── Cart
-│   ├── CartPageComponent
-│   └── CartItemComponent
+│   ├── CartRoutes
+│   ├── Pages
+│   │   └── CartPageComponent
+│   ├── Components
+│   │   └── CartItemComponent
+│   └── DataAccess
+│       └── CartStore
 │
 ├── Order
-│   ├── CheckoutPageComponent
-│   └── OrderSummaryComponent
+│   ├── OrderRoutes
+│   ├── Pages (checkout, order history, etc.)
+│   ├── Components
+│   └── DataAccess
 │
 ├── User
-│   ├── LoginComponent
-│   ├── RegisterComponent
-│   ├── ProfileComponent
-│   ├── OrdersListComponent
-│   └── OrderDetailComponent
+│   ├── UserRoutes
+│   ├── Pages (login, register, profile, etc.)
+│   ├── Components
+│   └── DataAccess
 │
 ├── Admin
-│   ├── AdminDashboardComponent
-│   ├── ProductManagementComponent
-│   ├── CategoryManagementComponent
-│   └── OrderManagementComponent
+│   ├── AdminRoutes
+│   ├── Pages (dashboard, product management, etc.)
+│   ├── Components
+│   └── DataAccess
 │
-├── NotFoundComponent
-├── UnauthorizedComponent
+├── Info
+│   ├── InfoRoutes
+│   └── Pages (contact, about, etc.)
+│
+├── Errors
+│   ├── NotFoundComponent
+│   └── UnauthorizedComponent
 │
 └── Shared
-    ├── ButtonComponent
-    ├── InputComponent
-    ├── ModalComponent
-    └── LoadingSpinnerComponent
+    ├── Components
+    │   ├── ButtonComponent
+    │   ├── EmptyStateComponent
+    │   ├── IconButtonComponent
+    │   ├── InputComponent
+    │   ├── LoadingSpinnerComponent
+    │   ├── ModalComponent
+    │   ├── PageTitleComponent
+    │   ├── SearchInputComponent
+    │   └── SectionHeaderComponent
+    ├── Pipes
+    └── Utils
 
 ---
 
@@ -73,21 +101,15 @@ Az alábbi táblázat bemutatja az alkalmazás fő oldalait és az azokhoz tarto
 
 | Oldal | Használt komponensek |
 |-----|-----|
-| Főoldal | HomePageComponent, ProductCardComponent |
-| Terméklista | ProductListComponent, ProductFilterComponent, ProductSearchComponent, ProductCardComponent |
-| Termék részletek | ProductDetailComponent, ProductGalleryComponent, AddToCartComponent |
-| Kosár | CartPageComponent, CartItemComponent |
-| Rendelés | CheckoutPageComponent, OrderSummaryComponent |
-| Bejelentkezés | LoginComponent |
-| Regisztráció | RegisterComponent |
-| Profil | ProfileComponent |
-| Saját rendelések | OrdersListComponent |
-| Rendelés részletek | OrderDetailComponent |
-| Admin dashboard | AdminDashboardComponent |
-| Termékkezelés | ProductManagementComponent |
-| Kategóriakezelés | CategoryManagementComponent |
-| Rendelések kezelése | OrderManagementComponent |
+| Főoldal | HomePageComponent, PageTitleComponent |
+| Shop főoldal (terméklista) | ProductListComponent, ProductCardComponent, ProductFilterComponent, ProductSearchComponent, EmptyStateComponent, LoadingSpinnerComponent |
+| Termék részletek | ProductDetailComponent, AddToCartComponent, ProductGalleryComponent |
+| Kosár | CartPageComponent, CartItemComponent, PageTitleComponent |
+| Rendelés (checkout, history) | Order specifikus komponensek |
+| Felhasználó (login, register, profile) | User specifikus komponensek |
+| Admin (dashboard, management) | Admin specifikus komponensek |
+| Info oldalak (contact, about) | Info specifikus komponensek |
 | 404 oldal | NotFoundComponent |
 | Jogosultsági hiba | UnauthorizedComponent |
 
-<small>Megjegyzés: A HeaderComponent, NavigationComponent, FooterComponent és a Shared komponensek több oldalon újrahasznosított, globális elemek, ezért nem külön oldalakhoz, hanem az alkalmazás általános felépítéséhez tartoznak.</small>
+<small>Megjegyzés: A Layout komponensek (ShellComponent, HeaderComponent, TopBarComponent, FooterComponent) és a Shared komponensek több oldalon újrahasznosított, globális elemek, ezért nem külön oldalakhoz, hanem az alkalmazás általános felépítéséhez tartoznak. Az egyes feature modulok saját routes, pages, components és data-access rétegekkel rendelkeznek.</small>
