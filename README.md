@@ -21,7 +21,7 @@ npm start
 
 ## 🌐 Publikus URL
 
-> _[Írd ide a deployolt alkalmazás URL-jét, pl. https://my-app.web.app]_
+> _https://nailshopweb.web.app_
 
 ---
 
