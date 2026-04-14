@@ -8,6 +8,11 @@ export interface OrderItem {
   productId: string; // Termék ID referencija (FK -> Product.id)
   quantity: number; // Rendelt mennyiség (darab)
 
+  // Termék pillanatkép
+  name: string; // Termék neve a rendelés pillanatában
+  price: number; // Termék ára a rendelés pillanatában
+  image?: string; // Termék képe (URL)
+
   // Ár információ
   unitPrice: number; // Egységár a rendelés pillanatában (Ft)
   subtotal: number; // Tétel teljes ára = quantity * unitPrice (Ft)
@@ -23,6 +28,7 @@ export interface CartProductSnapshot {
   price: number; // Termék ára (aktuális)
   oldPrice?: number; // Régi ár (ha van akció)
   image?: string; // Termék képe (URL)
+  imageAlt?: string; // Termék kép alt szövege
 }
 
 /**

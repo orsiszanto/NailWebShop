@@ -44,7 +44,7 @@ export class AddToCartComponent {
         name: this.productName(),
         price: this.productPrice(),
         oldPrice: this.productOldPrice() ?? undefined,
-        imageAlt: this.productImageAlt(),
+        imageAlt: this.productImageAlt?.() || this.productName?.(),
       },
       this.quantity
     );

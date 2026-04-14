@@ -15,23 +15,26 @@
 .top-bar__content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding-block: $space-2;
 }
 
-.top-bar__auth-nav {
+.top-bar__contact {
   display: flex;
-  gap: $space-4;
+  align-items: center;
+  gap: $space-2;
+  margin: 0;
+  font-size: $font-size-sm;
 }
 
-.top-bar a {
+.top-bar__contact a {
   color: $color-text-primary;
   font-weight: $font-weight-medium;
   text-decoration: none;
-}
 
-.top-bar a:hover {
-  text-decoration: underline;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 /* ✅ desktopon jelenjen meg */

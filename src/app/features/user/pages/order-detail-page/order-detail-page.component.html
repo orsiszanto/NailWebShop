@@ -1,1 +1,187 @@
-<p>order-detail-page.component works!</p>
+<div class="order-detail-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="order-detail-loading">
+      <app-loading-spinner></app-loading-spinner>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error() && !loading()) {
+    <div class="order-detail-error">
+      <div class="error-message">
+        <p>{{ error() }}</p>
+        <a routerLink="/user/orders" class="error-link">
+          Vissza a rendelésekhez
+        </a>
+      </div>
+    </div>
+  }
+
+  <!-- Order Detail -->
+  @if (order() && !loading() && !error()) {
+    <div class="order-detail">
+      <!-- Header -->
+      <div class="order-detail-header">
+        <div class="order-detail-title-section">
+          <h1 class="order-detail-title">Megrendelés #{{ order()!.id }}</h1>
+          <p class="order-detail-date">
+            Dátum: {{ formatDate(order()!.orderDate) }}
+          </p>
+        </div>
+        <div class="order-detail-status">
+          <span class="order-status" [class]="'order-status--' + order()!.status">
+            {{ getStatusLabel(order()!.status) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="order-detail-content">
+        <!-- Left Column: Shipping & Items -->
+        <div class="order-detail-main">
+          <!-- Shipping Address -->
+          <section class="order-detail-section">
+            <h2 class="section-title">Szállítási cím</h2>
+            <div class="shipping-address">
+              <p class="shipping-field">
+                <strong>{{ order()!.shippingData.name }}</strong>
+              </p>
+              <p class="shipping-field">{{ order()!.shippingData.address }}</p>
+              <p class="shipping-field">
+                {{ order()!.shippingData.zipCode }} {{ order()!.shippingData.city }}
+              </p>
+              <p class="shipping-field">{{ order()!.shippingData.phone }}</p>
+              <p class="shipping-field">{{ order()!.shippingData.email }}</p>
+            </div>
+          </section>
+
+          <!-- Order Items -->
+          <section class="order-detail-section">
+            <h2 class="section-title">Megrendelt termékek</h2>
+            <div class="items-table-wrapper">
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <th>Termék</th>
+                    <th class="align-right">Mennyiség</th>
+                    <th class="align-right">Egységár</th>
+                    <th class="align-right">Összesen</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of order()!.items; track item.id) {
+                    <tr>
+                      <td class="item-name">{{ item.name }}</td>
+                      <td class="align-right">{{ item.quantity }}</td>
+                      <td class="align-right"
+                        >{{ (item.price || 0) | number: '1.2-2' }} Ft</td
+                      >
+                      <td class="align-right item-subtotal">
+                        {{ ((item.price || 0) * item.quantity) | number: '1.2-2' }} Ft
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right Column: Summary -->
+        <div class="order-detail-sidebar">
+          <!-- Order Summary -->
+          <section class="order-summary-card">
+            <h3 class="summary-title">Összegzés</h3>
+
+            <div class="summary-row">
+              <span class="summary-label">Termékek:</span>
+              <span class="summary-value">
+                {{
+                  (order()!.items.reduce((sum, item) => sum + item.quantity, 0)) || 0
+                }}
+              </span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Részösszeg:</span>
+              <span class="summary-value">
+                {{
+                  (order()!.items.reduce(
+                    (sum, item) => sum + (item.price || 0) * item.quantity,
+                    0
+                  ) || 0) | number: '1.2-2'
+                }}
+                Ft
+              </span>
+            </div>
+
+            <div class="summary-row">
+              <span class="summary-label">Szállítás:</span>
+              <span class="summary-value summary-free">Ingyenes</span>
+            </div>
+
+            <div class="summary-divider"></div>
+
+            <div class="summary-row summary-total">
+              <span class="summary-label">Végösszeg:</span>
+              <span class="summary-value">{{ order()!.total | number: '1.2-2' }} Ft</span>
+            </div>
+          </section>
+
+          <!-- Status Timeline -->
+          <section class="status-timeline">
+            <h3 class="summary-title">Státusz</h3>
+            <div class="timeline">
+              <!-- Pending Status -->
+              <div class="timeline-item" [class.timeline-item--active]="true">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                  <p class="timeline-label">Megrendelés</p>
+                  <p class="timeline-date">{{ formatDate(order()!.orderDate) }}</p>
+                </div>
+              </div>
+
+              <!-- Confirmed Status -->
+              <div
+                class="timeline-item"
+                [class.timeline-item--active]="order()!.status === 'confirmed' || order()!.status === 'shipped' || order()!.status === 'delivered'">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                  <p class="timeline-label">Megerősítve</p>
+                </div>
+              </div>
+
+              <!-- Shipped Status -->
+              <div
+                class="timeline-item"
+                [class.timeline-item--active]="order()!.status === 'shipped' || order()!.status === 'delivered'">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                  <p class="timeline-label">Szállítás alatt</p>
+                </div>
+              </div>
+
+              <!-- Delivered Status -->
+              <div
+                class="timeline-item"
+                [class.timeline-item--active]="order()!.status === 'delivered'">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                  <p class="timeline-label">Kiszállítva</p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="order-detail-footer">
+        <a routerLink="/user/orders" class="btn btn-secondary">
+          ← Vissza a rendelésekhez
+        </a>
+      </div>
+    </div>
+  }
+</div>

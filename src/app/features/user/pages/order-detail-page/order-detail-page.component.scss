@@ -1,0 +1,432 @@
+@use '../../../../../styles/tokens/colors' as *;
+@use '../../../../../styles/tokens/spacing' as *;
+@use '../../../../../styles/tokens/radius' as *;
+@use '../../../../../styles/tokens/shadows' as *;
+@use '../../../../../styles/tokens/typography' as *;
+@use '../../../../../styles/abstracts/mixins' as *;
+
+.order-detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  padding: $space-6;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @include respond-to(md) {
+    padding: $space-4;
+    gap: $space-4;
+  }
+}
+
+.order-detail-loading,
+.order-detail-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.order-detail-error {
+  background-color: rgba($color-error, 0.08);
+  border-radius: $radius-lg;
+  padding: $space-6;
+}
+
+.error-message {
+  text-align: center;
+
+  p {
+    margin: 0 0 $space-4 0;
+    font-size: $font-size-base;
+    color: $color-error;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.error-link {
+  display: inline-block;
+  padding: $space-3 $space-4;
+  background-color: $color-error;
+  color: $color-surface;
+  text-decoration: none;
+  border-radius: $radius-md;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: darken($color-error, 10%);
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+/* Order Detail Header */
+.order-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-4;
+  border-bottom: 2px solid $color-border;
+  padding-bottom: $space-6;
+
+  @include respond-to(sm) {
+    flex-direction: column;
+    gap: $space-3;
+  }
+}
+
+.order-detail-title-section {
+  flex: 1;
+}
+
+.order-detail-title {
+  margin: 0;
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.order-detail-date {
+  margin: $space-2 0 0 0;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.order-detail-status {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.order-status {
+  display: inline-block;
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  background-color: rgba($color-info, 0.1);
+  color: $color-info;
+
+  &--pending {
+    background-color: rgba(#f57c00, 0.1);
+    color: #f57c00;
+  }
+
+  &--confirmed {
+    background-color: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &--shipped {
+    background-color: rgba($color-info, 0.1);
+    color: $color-info;
+  }
+
+  &--delivered {
+    background-color: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &--cancelled {
+    background-color: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+/* Order Detail Content */
+.order-detail-content {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: $space-6;
+
+  @include respond-to(lg) {
+    grid-template-columns: 1fr 350px;
+  }
+
+  @include respond-to(md) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.order-detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+}
+
+.order-detail-section {
+  background-color: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-5;
+  box-shadow: $shadow-sm;
+}
+
+.section-title {
+  margin: 0 0 $space-4 0;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  border-bottom: 2px solid $color-primary;
+  padding-bottom: $space-3;
+}
+
+/* Shipping Address */
+.shipping-address {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.shipping-field {
+  margin: 0;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  line-height: $line-height-normal;
+
+  &:first-child {
+    font-weight: $font-weight-semibold;
+    font-size: $font-size-lg;
+  }
+}
+
+/* Items Table */
+.items-table-wrapper {
+  overflow-x: auto;
+  margin: 0 (-$space-5);
+  padding: 0 $space-5;
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-base;
+
+  thead {
+    background-color: $color-bg;
+    border-bottom: 2px solid $color-border;
+  }
+
+  th {
+    padding: $space-4;
+    text-align: left;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+  }
+
+  td {
+    padding: $space-4;
+    border-bottom: 1px solid $color-border;
+    color: $color-text-primary;
+  }
+
+  tbody tr {
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $color-bg;
+    }
+  }
+}
+
+.item-name {
+  font-weight: $font-weight-semibold;
+}
+
+.item-subtotal {
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.align-right {
+  text-align: right;
+}
+
+/* Order Summary Sidebar */
+.order-detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.order-summary-card,
+.status-timeline {
+  background-color: $color-surface;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  padding: $space-5;
+  box-shadow: $shadow-sm;
+}
+
+.summary-title {
+  margin: 0 0 $space-4 0;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  border-bottom: 2px solid $color-primary;
+  padding-bottom: $space-3;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $space-3 0;
+  font-size: $font-size-base;
+
+  &.summary-total {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+  }
+}
+
+.summary-label {
+  color: $color-text-secondary;
+  font-weight: $font-weight-semibold;
+}
+
+.summary-value {
+  color: $color-text-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.summary-free {
+  color: $color-success;
+}
+
+.summary-divider {
+  height: 1px;
+  background-color: $color-border;
+  margin: $space-3 0;
+}
+
+/* Status Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  position: relative;
+  padding-left: $space-6;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    bottom: 12px;
+    width: 2px;
+    background-color: $color-border;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  display: flex;
+  gap: $space-3;
+  padding: $space-2 0;
+
+  &--active .timeline-marker {
+    background-color: $color-primary;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+  }
+
+  &--active .timeline-label {
+    color: $color-primary;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -20px;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: $color-border;
+  border: 3px solid $color-surface;
+  transition: all 0.2s ease-in-out;
+}
+
+.timeline-content {
+  padding: $space-2 0;
+}
+
+.timeline-label {
+  margin: 0;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
+  transition: all 0.2s ease-in-out;
+}
+
+.timeline-date {
+  margin: $space-1 0 0 0;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+/* Footer */
+.order-detail-footer {
+  display: flex;
+  justify-content: flex-start;
+  gap: $space-3;
+  padding-top: $space-4;
+  border-top: 1px solid $color-border;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+  padding: $space-3 $space-5;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  min-height: 44px;
+
+  &-secondary {
+    background-color: $color-bg;
+    color: $color-text-primary;
+    border: 1px solid $color-border;
+
+    &:hover {
+      border-color: $color-text-secondary;
+      background-color: $color-surface-alt;
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .order-detail-container {
+    padding: $space-4;
+    gap: $space-4;
+  }
+
+  .order-detail-header {
+    padding-bottom: $space-4;
+  }
+
+  .order-detail-title {
+    font-size: $font-size-xl;
+  }
+
+  .section-title {
+    font-size: $font-size-base;
+  }
+
+  .items-table {
+    font-size: $font-size-sm;
+
+    th,
+    td {
+      padding: $space-2;
+    }
+  }
+}

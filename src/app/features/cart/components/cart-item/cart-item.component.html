@@ -6,7 +6,7 @@
     [routerLink]="['/shop', item().productId]"
   >
     <div class="cart-item__image">
-      <span>{{ item().product.imageAlt }}</span>
+      <span>{{ item().product.imageAlt || item().product.name }}</span>
     </div>
   </a>
 

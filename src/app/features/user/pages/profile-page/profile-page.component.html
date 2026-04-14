@@ -1,1 +1,318 @@
-<p>profile-page.component works!</p>
+<div class="profile-page">
+  <div class="u-container profile-page__container">
+    <!-- Page header -->
+    <div class="profile-page__header">
+      <h1 class="profile-page__title">Profilom</h1>
+      <p class="profile-page__subtitle">{{ user()?.email }}</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="profile-tabs">
+      <button
+        type="button"
+        class="profile-tabs__btn"
+        [class.is-active]="activeTab() === 'profile'"
+        (click)="switchTab('profile')"
+        aria-label="Profil adatok">📋 Profil
+      </button>
+      <button
+        type="button"
+        class="profile-tabs__btn"
+        [class.is-active]="activeTab() === 'orders'"
+        (click)="switchTab('orders')"
+        aria-label="Múltbeli rendelések">📦 Rendeléseim
+      </button>
+    </div>
+
+    <!-- Alert messages -->
+    @if (error()) {
+      <div class="profile-page__alert" role="alert">
+        {{ error() }}
+      </div>
+    }
+
+    <!-- PROFILE TAB -->
+    @if (activeTab() === 'profile') {
+      <div class="profile-content">
+        <!-- VIEW MODE -->
+        @if (mode() === 'view') {
+          <section class="profile-section">
+            <div class="profile-section__header">
+              <h2 class="profile-section__title">Személyes adatok</h2>
+              <button
+                type="button"
+                class="profile-btn profile-btn--primary"
+                (click)="enterEditMode()"
+                [disabled]="authLoading()">
+                ✏️ Szerkesztés
+              </button>
+            </div>
+
+            <div class="profile-info-grid">
+              <div class="profile-info-item">
+                <label class="profile-info-label">Név</label>
+                <p class="profile-info-value">{{ user()?.name }}</p>
+              </div>
+              <div class="profile-info-item">
+                <label class="profile-info-label">Email cím</label>
+                <p class="profile-info-value">{{ user()?.email }}</p>
+              </div>
+              <div class="profile-info-item">
+                <label class="profile-info-label">Telefonszám</label>
+                <p class="profile-info-value">{{ user()?.phone || '-' }}</p>
+              </div>
+              <div class="profile-info-item">
+                <label class="profile-info-label">Szállítási cím</label>
+                <p class="profile-info-value">{{ user()?.address || '-' }}</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Password change section -->
+          <section class="profile-section">
+            <h2 class="profile-section__title">Biztonság</h2>
+            <p class="profile-section__description">Jelszó módosítása</p>
+
+            <form [formGroup]="passwordForm" (ngSubmit)="changePassword()" class="profile-form">
+              <div class="form-group">
+                <label for="current-password" class="form-label">Jelenlegi jelszó</label>
+                <input
+                  id="current-password"
+                  type="password"
+                  formControlName="currentPassword"
+                  class="form-input"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                  [attr.aria-invalid]="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" />
+                @if (passwordForm.get('currentPassword')?.touched && getPasswordFieldError('currentPassword')) {
+                  <p class="form-error">{{ getPasswordFieldError('currentPassword') }}</p>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="new-password" class="form-label">Új jelszó</label>
+                <input
+                  id="new-password"
+                  type="password"
+                  formControlName="newPassword"
+                  class="form-input"
+                  placeholder="••••••••"
+                  autocomplete="new-password"
+                  [attr.aria-invalid]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" />
+                @if (passwordForm.get('newPassword')?.touched && getPasswordFieldError('newPassword')) {
+                  <p class="form-error">{{ getPasswordFieldError('newPassword') }}</p>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="confirm-password" class="form-label">Jelszó megerősítése</label>
+                <input
+                  id="confirm-password"
+                  type="password"
+                  formControlName="confirmPassword"
+                  class="form-input"
+                  placeholder="••••••••"
+                  autocomplete="new-password"
+                  [attr.aria-invalid]="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched" />
+                @if (passwordForm.get('confirmPassword')?.touched && getPasswordFieldError('confirmPassword')) {
+                  <p class="form-error">{{ getPasswordFieldError('confirmPassword') }}</p>
+                }
+              </div>
+
+              <button
+                type="submit"
+                class="profile-btn profile-btn--primary"
+                [disabled]="passwordForm.invalid || loading()"
+                [attr.aria-busy]="loading()">
+                @if (loading()) {
+                  Jelszó módosítása...
+                } @else {
+                  🔐 Jelszó módosítása
+                }
+              </button>
+            </form>
+          </section>
+        }
+
+        <!-- EDIT MODE -->
+        @if (mode() === 'edit') {
+          <section class="profile-section">
+            <div class="profile-section__header">
+              <h2 class="profile-section__title">Személyes adatok szerkesztése</h2>
+            </div>
+
+            <form [formGroup]="editForm" (ngSubmit)="saveProfile()" class="profile-form">
+              <div class="form-group">
+                <label for="edit-name" class="form-label">Név</label>
+                <input
+                  id="edit-name"
+                  type="text"
+                  formControlName="name"
+                  class="form-input"
+                  placeholder="Teljes neved"
+                  autocomplete="name"
+                  [attr.aria-invalid]="editForm.get('name')?.invalid && editForm.get('name')?.touched" />
+                @if (editForm.get('name')?.touched && getEditFieldError('name')) {
+                  <p class="form-error">{{ getEditFieldError('name') }}</p>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="edit-email" class="form-label">Email cím</label>
+                <input
+                  id="edit-email"
+                  type="email"
+                  formControlName="email"
+                  class="form-input"
+                  placeholder="pelda@email.com"
+                  autocomplete="email"
+                  [attr.aria-invalid]="editForm.get('email')?.invalid && editForm.get('email')?.touched" />
+                @if (editForm.get('email')?.touched && getEditFieldError('email')) {
+                  <p class="form-error">{{ getEditFieldError('email') }}</p>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="edit-phone" class="form-label">Telefonszám</label>
+                <input
+                  id="edit-phone"
+                  type="tel"
+                  formControlName="phone"
+                  class="form-input"
+                  placeholder="+36 70 123 4567"
+                  autocomplete="tel" />
+              </div>
+
+              <div class="form-group">
+                <label for="edit-address" class="form-label">Szállítási cím</label>
+                <textarea
+                  id="edit-address"
+                  formControlName="address"
+                  class="form-input form-input--textarea"
+                  placeholder="1011 Budapest, Fő utca 1."
+                  autocomplete="street-address"></textarea>
+              </div>
+
+              <div class="profile-form__actions">
+                <button
+                  type="submit"
+                  class="profile-btn profile-btn--primary"
+                  [disabled]="editForm.invalid || loading()"
+                  [attr.aria-busy]="loading()">
+                  @if (loading()) {
+                    Mentés...
+                  } @else {
+                    💾 Mentés
+                  }
+                </button>
+                <button
+                  type="button"
+                  class="profile-btn profile-btn--secondary"
+                  (click)="cancelEdit()"
+                  [disabled]="loading()">
+                  ✕ Mégse
+                </button>
+              </div>
+            </form>
+          </section>
+        }
+      </div>
+    }
+
+    <!-- ORDERS TAB -->
+    @if (activeTab() === 'orders') {
+      <div class="profile-content">
+        @if (loading()) {
+          <div class="profile-page__loading">Rendelések betöltése...</div>
+        } @else if (orders().length === 0) {
+          <section class="profile-section">
+            <div class="profile-empty-state">
+              <div class="profile-empty-state__icon">📭</div>
+              <h2 class="profile-empty-state__title">Nincsenek múltbeli rendeléseid</h2>
+              <p class="profile-empty-state__description">Kezdj el vásárolni és tárold ide rendeléseid!</p>
+              <a href="/shop" class="profile-btn profile-btn--primary">🛍️ Ugrás az üzletbe</a>
+            </div>
+          </section>
+        } @else {
+          <section class="profile-section">
+            <h2 class="profile-section__title">Múltbeli rendeléseim</h2>
+            <div class="orders-list">
+              @for (order of orders(); track order.id) {
+                <div class="order-item">
+                  <div class="order-item__header" (click)="selectOrder(order.id)">
+                    <div class="order-item__info">
+                      <h3 class="order-item__title">Rendelés #{{ order.id.slice(-8).toUpperCase() }}</h3>
+                      <p class="order-item__date">{{ formatDate(order.orderDate) }}</p>
+                    </div>
+                    <div class="order-item__meta">
+                      <span class="order-item__status" [class]="'status--' + order.status">
+                        {{ getOrderStatusLabel(order.status) }}
+                      </span>
+                      <span class="order-item__price">{{ order.total }} Ft</span>
+                    </div>
+                    <button
+                      type="button"
+                      class="order-item__toggle"
+                      [attr.aria-expanded]="selectedOrderId() === order.id"
+                      aria-label="Rendelés részletei">
+                      @if (selectedOrderId() === order.id) {
+                        ▼
+                      } @else {
+                        ▶
+                      }
+                    </button>
+                  </div>
+
+                  <!-- Order details -->
+                  @if (selectedOrderId() === order.id) {
+                    <div class="order-item__details">
+                      <div class="order-details__section">
+                        <h4 class="order-details__heading">Rendelési tételek</h4>
+                        <div class="order-items-table">
+                          <div class="order-items-header">
+                            <div class="order-items-col">Termék</div>
+                            <div class="order-items-col">Mennyiség</div>
+                            <div class="order-items-col">Ár</div>
+                            <div class="order-items-col">Összesen</div>
+                          </div>
+                          @for (item of order.items; track item) {
+                            <div class="order-items-row">
+                              <div class="order-items-col">Termék</div>
+                              <div class="order-items-col">{{ item.quantity }} db</div>
+                              <div class="order-items-col">{{ item.unitPrice }} Ft</div>
+                              <div class="order-items-col order-items-col--total">
+                                <strong>{{ item.subtotal }} Ft</strong>
+                              </div>
+                            </div>
+                          }
+                        </div>
+                      </div>
+
+                      <div class="order-details__section">
+                        <h4 class="order-details__heading">Szállítási adatok</h4>
+                        <p class="order-details__text">{{ order.shippingData.address || '-' }}</p>
+                      </div>
+
+                      @if (order.notes) {
+                        <div class="order-details__section">
+                          <h4 class="order-details__heading">Megjegyzés</h4>
+                          <p class="order-details__text">{{ order.notes }}</p>
+                        </div>
+                      }
+
+                      <div class="order-details__footer">
+                        <p class="order-details__total">
+                          <strong>Teljes összeg: {{ order.total }} Ft</strong>
+                        </p>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          </section>
+        }
+      </div>
+    }
+  </div>
+</div>

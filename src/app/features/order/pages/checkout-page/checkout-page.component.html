@@ -10,32 +10,193 @@
       </div>
     } @else {
       <div class="checkout-layout">
+        <!-- CHECKOUT FORM -->
         <section class="checkout-form">
-          <h2>Szállítási adatok</h2>
-          <p>Itt lesz majd a checkout űrlap.</p>
+          <h2 class="checkout-form__title">Szállítási adatok</h2>
+
+          @if (error()) {
+            <div class="checkout-alert checkout-alert--error">
+              ⚠️ {{ error() }}
+            </div>
+          }
+
+          <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()" class="checkout-form__form">
+            <!-- Name -->
+            <div class="form-group">
+              <label for="name" class="form-label">Név</label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-control"
+                placeholder="Teljes neved"
+                [class.form-control--error]="
+                  checkoutForm.get('name')?.invalid &&
+                  checkoutForm.get('name')?.touched
+                " />
+              @if (checkoutForm.get('name')?.invalid && checkoutForm.get('name')?.touched) {
+                <span class="form-error">A név megadása kötelező (min. 2 karakter)</span>
+              }
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email" class="form-label">Email cím</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                placeholder="your@email.com"
+                [class.form-control--error]="
+                  checkoutForm.get('email')?.invalid &&
+                  checkoutForm.get('email')?.touched
+                " />
+              @if (checkoutForm.get('email')?.invalid && checkoutForm.get('email')?.touched) {
+                <span class="form-error">Érvényes email cím szükséges</span>
+              }
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+              <label for="phone" class="form-label">Telefonszám</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="form-control"
+                placeholder="+36 1 234 5678"
+                [class.form-control--error]="
+                  checkoutForm.get('phone')?.invalid &&
+                  checkoutForm.get('phone')?.touched
+                " />
+              @if (checkoutForm.get('phone')?.invalid && checkoutForm.get('phone')?.touched) {
+                <span class="form-error">Érvényes telefonszám szükséges (min. 10 karakter)</span>
+              }
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+              <label for="address" class="form-label">Szállítási cím</label>
+              <input
+                type="text"
+                id="address"
+                formControlName="address"
+                class="form-control"
+                placeholder="Utcacím, házszám"
+                [class.form-control--error]="
+                  checkoutForm.get('address')?.invalid &&
+                  checkoutForm.get('address')?.touched
+                " />
+              @if (checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched) {
+                <span class="form-error">A szállítási cím megadása kötelező</span>
+              }
+            </div>
+
+            <!-- City -->
+            <div class="form-group">
+              <label for="city" class="form-label">Város</label>
+              <input
+                type="text"
+                id="city"
+                formControlName="city"
+                class="form-control"
+                placeholder="Budapest"
+                [class.form-control--error]="
+                  checkoutForm.get('city')?.invalid &&
+                  checkoutForm.get('city')?.touched
+                " />
+              @if (checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched) {
+                <span class="form-error">A város megadása kötelező</span>
+              }
+            </div>
+
+            <!-- Zip Code -->
+            <div class="form-group">
+              <label for="zipCode" class="form-label">Irányítószám</label>
+              <input
+                type="text"
+                id="zipCode"
+                formControlName="zipCode"
+                class="form-control"
+                placeholder="1234"
+                [class.form-control--error]="
+                  checkoutForm.get('zipCode')?.invalid &&
+                  checkoutForm.get('zipCode')?.touched
+                " />
+              @if (checkoutForm.get('zipCode')?.invalid && checkoutForm.get('zipCode')?.touched) {
+                <span class="form-error">Érvényes irányítószám szükséges (4-5 karakter)</span>
+              }
+            </div>
+
+            <!-- Terms and Conditions -->
+            <div class="form-group form-group--checkbox">
+              <input
+                type="checkbox"
+                id="terms"
+                formControlName="terms"
+                class="form-checkbox" />
+              <label for="terms" class="form-label form-label--checkbox">
+                Elfogadom az
+                <a href="/info/terms" target="_blank" class="form-link">användarvillkor</a> és az
+                <a href="/info/privacy" target="_blank" class="form-link">adatvédelmi nyilatkozat</a>
+              </label>
+              @if (checkoutForm.get('terms')?.invalid && checkoutForm.get('terms')?.touched) {
+                <span class="form-error">Az elfogadása kötelező a rendeléshez</span>
+              }
+            </div>
+
+            <!-- Submit Button -->
+            <button
+              type="submit"
+              class="checkout-form__submit"
+              [disabled]="loading() || checkoutForm.invalid">
+              @if (loading()) {
+                <span class="spinner"></span> Rendelés feldolgozása...
+              } @else {
+                ✓ Rendelés leadása
+              }
+            </button>
+          </form>
         </section>
 
+        <!-- ORDER SUMMARY -->
         <aside class="checkout-summary">
-          <h2>Rendelés összegzése</h2>
+          <h2 class="checkout-summary__title">Rendelés összegzése</h2>
 
-          <div class="checkout-summary__row">
-            <span>Termékek ({{ totalItems() }} db)</span>
-            <strong>{{ totalPrice() }} Ft</strong>
+          <!-- Order Items -->
+          <div class="checkout-summary__items">
+            @for (item of items(); track item.id) {
+              <div class="summary-item">
+                <div class="summary-item__name">{{ item.product.name }}</div>
+                <div class="summary-item__qty">{{ item.quantity }} × {{ item.unitPrice }} Ft</div>
+                <div class="summary-item__total">{{ item.subtotal }} Ft</div>
+              </div>
+            }
           </div>
 
-          <div class="checkout-summary__row">
-            <span>Szállítás</span>
-            <strong>Ingyenes</strong>
+          <!-- Totals -->
+          <div class="checkout-summary__totals">
+            <div class="checkout-summary__row">
+              <span>Termékek ({{ totalItems() }} db)</span>
+              <strong>{{ totalPrice() }} Ft</strong>
+            </div>
+
+            <div class="checkout-summary__row">
+              <span>Szállítás</span>
+              <strong>Ingyenes</strong>
+            </div>
+
+            <div class="checkout-summary__total">
+              <span>Összesen</span>
+              <strong>{{ totalPrice() }} Ft</strong>
+            </div>
           </div>
 
-          <div class="checkout-summary__total">
-            <span>Összesen</span>
-            <strong>{{ totalPrice() }} Ft</strong>
+          <!-- Actions -->
+          <div class="checkout-summary__actions">
+            <a routerLink="/cart" class="checkout-summary__back"> ← Vissza a kosárhoz </a>
           </div>
-
-          <a routerLink="/cart" class="checkout-summary__back">
-            Vissza a kosárhoz
-          </a>
         </aside>
       </div>
     }

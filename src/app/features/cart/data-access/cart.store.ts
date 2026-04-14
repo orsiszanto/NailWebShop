@@ -57,6 +57,8 @@ export class CartStore {
         id: crypto.randomUUID(),
         productId,
         quantity,
+        name: product.name,
+        price: product.price,
         unitPrice: product.price,
         subtotal: product.price * quantity,
         product,
@@ -119,10 +121,20 @@ export class CartStore {
       if (stored) {
         const parsed = JSON.parse(stored);
         return parsed.map((item: any) => ({
-          ...item,
+          id: item.id,
+          productId: item.productId,
           quantity: Number(item.quantity) || 1,
+          name: item.name || '',
+          price: Number(item.price) || 0,
+          image: item.image,
           unitPrice: Number(item.unitPrice) || 0,
           subtotal: Number(item.subtotal) || (Number(item.quantity) || 1) * (Number(item.unitPrice) || 0),
+          product: item.product || {
+            id: item.productId,
+            name: item.name || '',
+            price: Number(item.price) || 0,
+            image: item.image,
+          },
         }));
       }
       return [];

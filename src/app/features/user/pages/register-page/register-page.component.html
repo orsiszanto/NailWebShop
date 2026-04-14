@@ -27,17 +27,20 @@
         <p>Töltsd ki az adataidat, és hozd létre saját fiókodat.</p>
       </div>
 
-      <form class="auth-form" novalidate>
+      <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form" novalidate>
         <div class="auth-form__field">
           <label for="register-name">Név</label>
           <input
             id="register-name"
             type="text"
-            name="name"
+            formControlName="name"
             autocomplete="name"
             placeholder="Teljes neved"
+            [attr.aria-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
           />
-          <p class="auth-form__hint">Ide fog majd kerülni a név validáció üzenete.</p>
+          @if (form.get('name')?.touched && nameError) {
+            <p class="auth-form__hint auth-form__hint--error">{{ nameError }}</p>
+          }
         </div>
 
         <div class="auth-form__field">
@@ -45,11 +48,14 @@
           <input
             id="register-email"
             type="email"
-            name="email"
+            formControlName="email"
             autocomplete="email"
             placeholder="pelda@email.com"
+            [attr.aria-invalid]="form.get('email')?.invalid && form.get('email')?.touched"
           />
-          <p class="auth-form__hint">Ide fog majd kerülni az email validáció üzenete.</p>
+          @if (form.get('email')?.touched && emailError) {
+            <p class="auth-form__hint auth-form__hint--error">{{ emailError }}</p>
+          }
         </div>
 
         <div class="auth-form__field">
@@ -57,11 +63,14 @@
           <input
             id="register-password"
             type="password"
-            name="password"
+            formControlName="password"
             autocomplete="new-password"
             placeholder="••••••••"
+            [attr.aria-invalid]="form.get('password')?.invalid && form.get('password')?.touched"
           />
-          <p class="auth-form__hint">Ide fog majd kerülni a jelszó validáció üzenete.</p>
+          @if (form.get('password')?.touched && passwordError) {
+            <p class="auth-form__hint auth-form__hint--error">{{ passwordError }}</p>
+          }
         </div>
 
         <div class="auth-form__field">
@@ -69,19 +78,32 @@
           <input
             id="register-password-confirm"
             type="password"
-            name="passwordConfirm"
+            formControlName="passwordConfirm"
             autocomplete="new-password"
             placeholder="••••••••"
+            [attr.aria-invalid]="(form.get('passwordConfirm')?.invalid || form.hasError('passwordMismatch')) && form.get('passwordConfirm')?.touched"
           />
-          <p class="auth-form__hint">Ide fog majd kerülni a jelszó megerősítés üzenete.</p>
+          @if (form.get('passwordConfirm')?.touched && passwordConfirmError) {
+            <p class="auth-form__hint auth-form__hint--error">{{ passwordConfirmError }}</p>
+          }
         </div>
 
-        <div class="auth-form__error" aria-live="polite">
-          Itt fog megjelenni az általános hibaüzenet.
-        </div>
+        @if (error()) {
+          <div class="auth-form__error" role="alert">
+            {{ error() }}
+          </div>
+        }
 
-        <button type="submit" class="auth-form__submit">
-          Regisztráció
+        <button 
+          type="submit" 
+          class="auth-form__submit"
+          [disabled]="form.invalid || loading()"
+          [attr.aria-busy]="loading()">
+          @if (loading()) {
+            Regisztráció...
+          } @else {
+            Regisztráció
+          }
         </button>
       </form>
 
