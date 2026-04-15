@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  Firestore,
   collection,
   getDocs,
   addDoc,
@@ -10,16 +9,17 @@ import {
   query,
   where,
   QueryDocumentSnapshot,
-} from '@angular/fire/firestore';
-import { inject } from '@angular/core';
+  getFirestore,
+} from 'firebase/firestore';
+import { firebaseApp } from '../../../core/firebase/firebase.config';
 import { Product } from '../../../core/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminProductService {
-  private firestore = inject(Firestore);
-  private productsCollection = collection(this.firestore, 'products');
+  private readonly firestore = getFirestore(firebaseApp);
+  private readonly productsCollection = collection(this.firestore, 'products');
 
   async getAll(): Promise<Product[]> {
     try {

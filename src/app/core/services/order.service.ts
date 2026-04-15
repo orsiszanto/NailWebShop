@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { firestore } from '../firebase/firebase.config';
+import { firebaseApp } from '../firebase/firebase.config';
+import { getFirestore } from 'firebase/firestore';
 import {
   collection,
   query,
@@ -24,6 +25,8 @@ export interface OrderWithItems extends Order {
   providedIn: 'root',
 })
 export class OrderService {
+  private readonly firestore = getFirestore(firebaseApp);
+
   /**
    * Felhasználó összes rendelésének lekérése
    * @param userId Felhasználó ID
@@ -33,7 +36,7 @@ export class OrderService {
     try {
       // Query: orders where userId == param
       const q = query(
-        collection(firestore, 'orders'),
+        collection(this.firestore, 'orders'),
         where('userId', '==', userId)
       );
 
@@ -50,7 +53,7 @@ export class OrderService {
 
         // Items lekérése a subcollection-ből
         const itemsSnapshot = await getDocs(
-          collection(firestore, 'orders', orderDoc.id, 'items')
+          collection(this.firestore, 'orders', orderDoc.id, 'items')
         );
 
         const items: OrderItem[] = itemsSnapshot.docs.map((itemDoc) =>
@@ -77,7 +80,7 @@ export class OrderService {
    */
   async getOrderDetails(orderId: string): Promise<OrderWithItems> {
     try {
-      const orderDocRef = doc(firestore, 'orders', orderId);
+      const orderDocRef = doc(this.firestore, 'orders', orderId);
       const orderSnapshot = await getDoc(orderDocRef);
 
       if (!orderSnapshot.exists()) {
@@ -92,7 +95,7 @@ export class OrderService {
 
       // Items lekérése
       const itemsSnapshot = await getDocs(
-        collection(firestore, 'orders', orderId, 'items')
+        collection(this.firestore, 'orders', orderId, 'items')
       );
 
       const items: OrderItem[] = itemsSnapshot.docs.map((itemDoc) =>
@@ -121,7 +124,7 @@ export class OrderService {
   ): Promise<OrderWithItems[]> {
     try {
       const q = query(
-        collection(firestore, 'orders'),
+        collection(this.firestore, 'orders'),
         where('userId', '==', userId),
         where('status', '==', status)
       );
@@ -137,7 +140,7 @@ export class OrderService {
         };
 
         const itemsSnapshot = await getDocs(
-          collection(firestore, 'orders', orderDoc.id, 'items')
+          collection(this.firestore, 'orders', orderDoc.id, 'items')
         );
 
         const items: OrderItem[] = itemsSnapshot.docs.map((itemDoc) =>
@@ -184,7 +187,7 @@ export class OrderService {
         updatedAt: serverTimestamp(),
       };
 
-      const orderRef = await addDoc(collection(firestore, 'orders'), orderData);
+      const orderRef = await addDoc(collection(this.firestore, 'orders'), orderData);
       const orderId = orderRef.id;
 
       // 2. Rendelés tételeinek hozzáadása (items subcollection)
@@ -201,7 +204,7 @@ export class OrderService {
         };
 
         await addDoc(
-          collection(firestore, 'orders', orderId, 'items'),
+          collection(this.firestore, 'orders', orderId, 'items'),
           itemData
         );
       }

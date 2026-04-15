@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  Firestore,
   collection,
   getDocs,
   getDoc,
@@ -10,8 +9,9 @@ import {
   orderBy,
   limit,
   QueryDocumentSnapshot,
-} from '@angular/fire/firestore';
-import { inject } from '@angular/core';
+  getFirestore,
+} from 'firebase/firestore';
+import { firebaseApp } from '../../../core/firebase/firebase.config';
 import { Order } from '../../../core/models';
 
 export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
@@ -20,8 +20,8 @@ export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'c
   providedIn: 'root',
 })
 export class AdminOrderService {
-  private firestore = inject(Firestore);
-  private ordersCollection = collection(this.firestore, 'orders');
+  private readonly firestore = getFirestore(firebaseApp);
+  private readonly ordersCollection = collection(this.firestore, 'orders');
 
   async getAll(limitCount = 100): Promise<Order[]> {
     try {

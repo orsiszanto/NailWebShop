@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  Firestore,
   collection,
   getDocs,
   addDoc,
@@ -8,16 +7,17 @@ import {
   deleteDoc,
   doc,
   QueryDocumentSnapshot,
-} from '@angular/fire/firestore';
-import { inject } from '@angular/core';
+  getFirestore,
+} from 'firebase/firestore';
+import { firebaseApp } from '../../../core/firebase/firebase.config';
 import { Category } from '../../../core/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminCategoryService {
-  private firestore = inject(Firestore);
-  private categoriesCollection = collection(this.firestore, 'categories');
+  private readonly firestore = getFirestore(firebaseApp);
+  private readonly categoriesCollection = collection(this.firestore, 'categories');
 
   async getAll(): Promise<Category[]> {
     try {

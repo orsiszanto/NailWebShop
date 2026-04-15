@@ -7,7 +7,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
 import { OrderService, OrderWithItems } from '../../../../core/services/order.service';
 import { User } from '../../../../core/models/user.model';
 import { updateDoc, doc } from 'firebase/firestore';
-import { firestore } from '../../../../core/firebase/firebase.config';
+import { FirebaseService } from '../../../../core/firebase/firebase.service';
 import { NotificationService } from '../../../../core/services/notification.service';
 
 export interface ProfileState {
@@ -30,6 +30,7 @@ export class ProfilePageComponent implements OnInit {
   private readonly authStore = inject(AuthStore);
   private readonly authService = inject(AuthService);
   private readonly orderService = inject(OrderService);
+  private readonly firebaseService = inject(FirebaseService);
   private readonly fb = inject(FormBuilder);
   private readonly notificationService = inject(NotificationService);
 
@@ -180,7 +181,7 @@ export class ProfilePageComponent implements OnInit {
       }
 
       // Firestore dokumentum frissítése (név, telefonszám, cím, email)
-      await updateDoc(doc(firestore, 'users', userId), {
+      await updateDoc(doc(this.firebaseService.firestore, 'users', userId), {
         name,
         email,
         phone: phone || null,

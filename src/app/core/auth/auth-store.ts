@@ -39,6 +39,12 @@ export class AuthStore {
    * Initialize auth state from Firebase
    */
   private initializeAuthState(): void {
+    // Set loading to true - keep it true until user data arrives
+    this.authState.update((state) => ({
+      ...state,
+      loading: true,
+    }));
+
     this.authService.getCurrentUser().subscribe((user) => {
       this.authState.update((state) => ({
         ...state,

@@ -14,10 +14,10 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
   deleteUser,
+  getAuth,
 } from 'firebase/auth';
-import { auth } from '../firebase/firebase.config';
-import { firestore } from '../firebase/firebase.config';
-import { doc, setDoc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { firebaseApp } from '../firebase/firebase.config';
+import { doc, setDoc, getDoc, updateDoc, deleteDoc, getFirestore } from 'firebase/firestore';
 import { Observable, from, switchMap } from 'rxjs';
 import { User } from '../models/user.model';
 
@@ -25,6 +25,8 @@ import { User } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
+  private readonly auth = getAuth(firebaseApp);
+  private readonly firestore = getFirestore(firebaseApp);
   /**
    * Register új felhasználót Firebase-ben és Firestore-ban
    * @param email Felhasználó email
@@ -40,7 +42,7 @@ export class AuthService {
     try {
       // 1. Firebase Auth felhasználó létrehozása
       const userCredential = await createUserWithEmailAndPassword(
-        auth,
+        this.auth,
         email,
         password
       );
@@ -48,7 +50,7 @@ export class AuthService {
       const firebaseUser = userCredential.user;
 
       // 2. Felhasználó adatok tárolása Firestore-ban
-      await setDoc(doc(firestore, 'users', firebaseUser.uid), {
+      await setDoc(doc(this.firestore, 'users', firebaseUser.uid), {
         id: firebaseUser.uid,
         email: firebaseUser.email,
         name: displayName,
@@ -59,7 +61,7 @@ export class AuthService {
 
       // 3. Kijelentkeztetjük az automatikusan bejelentkeztetett felhasználót
       // (createUserWithEmailAndPassword automatikusan bejelentkeztet)
-      await signOut(auth);
+      await signOut(this.auth);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       throw this.mapFirebaseError(err);
@@ -75,10 +77,10 @@ export class AuthService {
   async login(email: string, password: string): Promise<FirebaseUser | null> {
     try {
       // Session persistence beállítása
-      await setPersistence(auth, browserSessionPersistence);
+      await setPersistence(this.auth, browserSessionPersistence);
 
       const userCredential = await signInWithEmailAndPassword(
-        auth,
+        this.auth,
         email,
         password
       );
@@ -96,7 +98,7 @@ export class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      await signOut(auth);
+      await signOut(this.auth);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       throw this.mapFirebaseError(err);
@@ -110,7 +112,7 @@ export class AuthService {
    */
   getCurrentUser(): Observable<User | null> {
     return new Observable((observer) => {
-      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      const unsubscribe = onAuthStateChanged(this.auth, async (firebaseUser) => {
         if (!firebaseUser) {
           observer.next(null);
           return;
@@ -118,7 +120,7 @@ export class AuthService {
 
         // Firestore-ból betöltjük a teljes user adatokat
         try {
-          const userDocRef = doc(firestore, 'users', firebaseUser.uid);
+          const userDocRef = doc(this.firestore, 'users', firebaseUser.uid);
           const userDoc = await getDoc(userDocRef);
 
           if (userDoc.exists()) {
@@ -171,7 +173,7 @@ export class AuthService {
    */
   async updateUserEmail(newEmail: string): Promise<void> {
     try {
-      const currentUser = auth.currentUser;
+      const currentUser = this.auth.currentUser;
       if (!currentUser) {
         throw new Error('Nincs bejelentkezett felhasználó.');
       }
@@ -180,7 +182,7 @@ export class AuthService {
       await updateEmail(currentUser, newEmail);
 
       // 2. Firestore dokumentum frissítése
-      await updateDoc(doc(firestore, 'users', currentUser.uid), {
+      await updateDoc(doc(this.firestore, 'users', currentUser.uid), {
         email: newEmail,
         updatedAt: new Date(),
       });
@@ -200,7 +202,7 @@ export class AuthService {
    */
   async updateUserPassword(newPassword: string): Promise<void> {
     try {
-      const currentUser = auth.currentUser;
+      const currentUser = this.auth.currentUser;
       if (!currentUser) {
         throw new Error('Nincs bejelentkezett felhasználó.');
       }
@@ -209,7 +211,7 @@ export class AuthService {
       await updatePassword(currentUser, newPassword);
 
       // Firestore dokumentum updatedAt frissítése
-      await updateDoc(doc(firestore, 'users', currentUser.uid), {
+      await updateDoc(doc(this.firestore, 'users', currentUser.uid), {
         updatedAt: new Date(),
       });
     } catch (error: unknown) {
@@ -225,7 +227,7 @@ export class AuthService {
    */
   async sendPasswordReset(email: string): Promise<void> {
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(this.auth, email);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       throw this.mapFirebaseError(err);
@@ -238,7 +240,7 @@ export class AuthService {
    */
   async sendVerification(): Promise<void> {
     try {
-      const currentUser = auth.currentUser;
+      const currentUser = this.auth.currentUser;
       if (!currentUser) {
         throw new Error('Nincs bejelentkezett felhasználó.');
       }
@@ -258,7 +260,7 @@ export class AuthService {
    */
   async deleteAccount(password: string): Promise<void> {
     try {
-      const currentUser = auth.currentUser;
+      const currentUser = this.auth.currentUser;
       if (!currentUser || !currentUser.email) {
         throw new Error('Nincs bejelentkezett felhasználó.');
       }
@@ -271,7 +273,7 @@ export class AuthService {
       await reauthenticateWithCredential(currentUser, credential);
 
       // 2. Firestore dokumentum törlése
-      await deleteDoc(doc(firestore, 'users', currentUser.uid));
+      await deleteDoc(doc(this.firestore, 'users', currentUser.uid));
 
       // 3. Firebase Auth felhasználó törlése
       await deleteUser(currentUser);

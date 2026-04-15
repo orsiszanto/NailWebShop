@@ -5,25 +5,25 @@
   </div>
 
   <div class="dashboard-grid">
-    <div class="dashboard-card" routerLink="/admin/products">
+    <button class="dashboard-card" (click)="navigateTo('/admin/products')" type="button" aria-label="Termékkezelés megnyitása">
       <div class="card-icon">📦</div>
       <h3>Termékkezelés</h3>
       <p>Termékek hozzáadása, szerkesztése, törlése</p>
       <span class="card-action">Megnyitás →</span>
-    </div>
+    </button>
 
-    <div class="dashboard-card" routerLink="/admin/categories">
+    <button class="dashboard-card" (click)="navigateTo('/admin/categories')" type="button" aria-label="Kategóriák megnyitása">
       <div class="card-icon">📁</div>
       <h3>Kategóriák</h3>
       <p>Kategóriák kezelése és szervezése</p>
       <span class="card-action">Megnyitás →</span>
-    </div>
+    </button>
 
-    <div class="dashboard-card" routerLink="/admin/orders">
+    <button class="dashboard-card" (click)="navigateTo('/admin/orders')" type="button" aria-label="Rendelések megnyitása">
       <div class="card-icon">📋</div>
       <h3>Rendelések</h3>
       <p>Rendelések megtekintése és státusz módosítása</p>
       <span class="card-action">Megnyitás →</span>
-    </div>
+    </button>
   </div>
 </div>
