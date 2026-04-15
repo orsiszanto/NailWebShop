@@ -55,6 +55,10 @@ ui-debug.log
 .firebase-*.zip
 emulator-ui/
 
+# Service account keys / credentials
+scripts/*.json
+scripts/nailshopweb-key.json
+
 # Functions
 functions/node_modules/
 functions/.env
