@@ -289,6 +289,22 @@
   }
 }
 
+.profile-btn--danger {
+  background-color: #f56565;
+  color: white;
+  border: 1px solid #d53030;
+
+  &:hover:not(:disabled) {
+    background-color: #d53030;
+    border-color: #c53030;
+    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.25);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
 /* Empty state */
 .profile-empty-state {
   padding: $space-8;
@@ -646,4 +662,115 @@
       }
     }
   }
+}
+
+/* Profile sections */
+.profile-section--danger {
+  border: 1px solid #fed7d7;
+  background-color: #fff5f5;
+  border-radius: $radius-md;
+  padding: $space-6;
+  margin-top: $space-8;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $space-4;
+}
+
+.modal-content {
+  background-color: $color-surface;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-lg;
+  max-width: 500px;
+  width: 100%;
+  animation: modalSlideIn 0.3s ease-out;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-6;
+  border-bottom: 1px solid $color-border;
+}
+
+.modal-title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: $font-size-lg;
+  cursor: pointer;
+  color: $color-text-secondary;
+  padding: $space-2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: $radius-md;
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    background-color: $color-surface-alt;
+    color: $color-text-primary;
+  }
+
+  &:focus {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.modal-body {
+  padding: $space-6;
+}
+
+.modal-warning {
+  padding: $space-4;
+  background-color: #fef5e7;
+  border-left: 4px solid #f39c12;
+  border-radius: $radius-md;
+  margin-bottom: $space-6;
+  color: #d68910;
+  font-size: $font-size-sm;
+  margin: 0;
+}
+
+.modal-footer {
+  display: flex;
+  gap: $space-3;
+  justify-content: flex-end;
+  padding: $space-6;
+  border-top: 1px solid $color-border;
+}
+
+.delete-form {
+  width: 100%;
 }

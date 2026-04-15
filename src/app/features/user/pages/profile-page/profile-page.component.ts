@@ -75,6 +75,14 @@ export class ProfilePageComponent implements OnInit {
     confirmPassword: ['', [Validators.required]],
   });
 
+  // Delete account form
+  readonly deleteForm: FormGroup = this.fb.group({
+    password: ['', [Validators.required, Validators.minLength(6)]],
+  });
+
+  // Delete modal state
+  readonly showDeleteModal = signal(false);
+
   ngOnInit(): void {
     // Load user data into form
     const userData = this.user();
@@ -319,5 +327,60 @@ export class ProfilePageComponent implements OnInit {
    */
   formatDate(date: Date | undefined): string {
     return this.orderService.formatDate(date);
+  }
+
+  /**
+   * Delete modal megnyitása
+   */
+  openDeleteModal(): void {
+    this.showDeleteModal.set(true);
+    this.deleteForm.reset();
+  }
+
+  /**
+   * Delete modal bezárása
+   */
+  closeDeleteModal(): void {
+    this.showDeleteModal.set(false);
+    this.deleteForm.reset();
+  }
+
+  /**
+   * Profil törlésének megerősítése és végrehajtása
+   */
+  async confirmDelete(): Promise<void> {
+    if (this.deleteForm.invalid) {
+      return;
+    }
+
+    const password = this.deleteForm.get('password')?.value;
+
+    try {
+      this.profileState.update((state) => ({ ...state, loading: true }));
+      await this.authStore.deleteAccount(password);
+      this.notificationService.success('Siker', 'Fiók sikeresen törölve.');
+      this.closeDeleteModal();
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Ismeretlen hiba történt.';
+      this.profileState.update((state) => ({
+        ...state,
+        error: message,
+        loading: false,
+      }));
+    }
+  }
+
+  /**
+   * Delete form field error message
+   */
+  getDeleteFieldError(fieldName: string): string | null {
+    const control = this.deleteForm.get(fieldName);
+    if (control?.hasError('required')) {
+      return 'A jelszó kötelező.';
+    }
+    if (control?.hasError('minlength')) {
+      return 'A jelszó legalább 6 karakter hosszú kell hogy legyen.';
+    }
+    return null;
   }
 }

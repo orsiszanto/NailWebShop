@@ -1,1 +1,200 @@
-<p>product-management.component works!</p>
+<div class="product-management">
+  <div class="page-header">
+    <h1>Termékkezelés</h1>
+    <button class="btn btn-primary" (click)="openNewProductModal()" [disabled]="loading()">
+      + Új termék
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Betöltés...</div>
+  }
+
+  @if (!loading() && products().length === 0) {
+    <div class="empty-state">
+      <p>Még nincsenek termékek.</p>
+      <button class="btn btn-primary" (click)="openNewProductModal()">
+        Első termék hozzáadása
+      </button>
+    </div>
+  }
+
+  @if (!loading() && products().length > 0) {
+    <div class="table-container">
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Termék név</th>
+            <th>Kategória</th>
+            <th>Ár</th>
+            <th>Készlet</th>
+            <th>Akciós</th>
+            <th>Status</th>
+            <th>Műveletek</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of products(); track product.id) {
+            <tr class="product-row">
+              <td class="cell-name">{{ product.name }}</td>
+              <td>{{ getCategoryName(product.category) }}</td>
+              <td class="cell-price">{{ product.price | number: '1.2-2' }} Ft</td>
+              <td class="cell-stock" [class.low-stock]="product.stock < 5">
+                {{ product.stock }}
+              </td>
+              <td class="cell-sale">
+                <span class="badge" [class.badge-success]="isOnSale(product)" [class.badge-secondary]="!isOnSale(product)">
+                  {{ isOnSale(product) ? 'Igen' : 'Nem' }}
+                </span>
+              </td>
+              <td class="cell-active">
+                <span class="badge" [class.badge-active]="product.active" [class.badge-inactive]="!product.active">
+                  {{ product.active ? 'Aktív' : 'Inaktív' }}
+                </span>
+              </td>
+              <td class="cell-actions">
+                <button class="btn btn-sm btn-edit" (click)="openEditModal(product)">
+                  Szerkesztés
+                </button>
+                <button class="btn btn-sm btn-delete" (click)="deleteProduct(product.id)">
+                  Törlés
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Edit/Create Modal -->
+  @if (isEditModalOpen()) {
+    <div class="modal-overlay" (click)="closeEditModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ selectedProduct() ? 'Termék szerkesztése' : 'Új termék' }}</h2>
+          <button class="modal-close" (click)="closeEditModal()">×</button>
+        </div>
+
+        <form [formGroup]="productForm" class="product-form">
+          <div class="form-group">
+            <label for="name">Termék név *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="Pl: Gél lakk"
+              class="form-control"
+            />
+            @if (getFieldError('name')) {
+              <span class="error-message">{{ getFieldError('name') }}</span>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Kategória *</label>
+              <select id="category" formControlName="category" class="form-control">
+                <option value="">Válassz kategóriát</option>
+                @for (cat of categories; track cat.id) {
+                  <option [value]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
+              @if (getFieldError('category')) {
+                <span class="error-message">{{ getFieldError('category') }}</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="price">Ár (Ft) *</label>
+              <input
+                type="number"
+                id="price"
+                formControlName="price"
+                placeholder="0"
+                class="form-control"
+              />
+              @if (getFieldError('price')) {
+                <span class="error-message">{{ getFieldError('price') }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Leírás *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="Termék leírása..."
+              rows="4"
+              class="form-control"
+            ></textarea>
+            @if (getFieldError('description')) {
+              <span class="error-message">{{ getFieldError('description') }}</span>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="stock">Készlet *</label>
+              <input
+                type="number"
+                id="stock"
+                formControlName="stock"
+                placeholder="0"
+                class="form-control"
+              />
+              @if (getFieldError('stock')) {
+                <span class="error-message">{{ getFieldError('stock') }}</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="oldPrice">Eredeti ár (akciós terméknél)</label>
+              <input
+                type="number"
+                id="oldPrice"
+                formControlName="oldPrice"
+                placeholder="0"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="images">Képek URL-je *</label>
+            <textarea
+              id="images"
+              formControlName="images"
+              placeholder="https://... (soronként egy URL)"
+              rows="3"
+              class="form-control"
+              [title]="'Soronként egy kép URL-je'"
+            ></textarea>
+            @if (getFieldError('images')) {
+              <span class="error-message">{{ getFieldError('images') }}</span>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group checkbox">
+              <label class="checkbox-label">
+                <input type="checkbox" formControlName="active" class="form-checkbox" />
+                <span>Aktív termék</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+              Mégse
+            </button>
+            <button type="button" class="btn btn-primary" (click)="saveProduct()" [disabled]="!productForm.valid">
+              {{ selectedProduct() ? 'Módosítás' : 'Létrehozás' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+

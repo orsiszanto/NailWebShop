@@ -1,1 +1,29 @@
-<p>admin-dashboard.component works!</p>
+<div class="dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <p class="subtitle">Válassz egy modult az adminisztrációhoz</p>
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="dashboard-card" routerLink="/admin/products">
+      <div class="card-icon">📦</div>
+      <h3>Termékkezelés</h3>
+      <p>Termékek hozzáadása, szerkesztése, törlése</p>
+      <span class="card-action">Megnyitás →</span>
+    </div>
+
+    <div class="dashboard-card" routerLink="/admin/categories">
+      <div class="card-icon">📁</div>
+      <h3>Kategóriák</h3>
+      <p>Kategóriák kezelése és szervezése</p>
+      <span class="card-action">Megnyitás →</span>
+    </div>
+
+    <div class="dashboard-card" routerLink="/admin/orders">
+      <div class="card-icon">📋</div>
+      <h3>Rendelések</h3>
+      <p>Rendelések megtekintése és státusz módosítása</p>
+      <span class="card-action">Megnyitás →</span>
+    </div>
+  </div>
+</div>

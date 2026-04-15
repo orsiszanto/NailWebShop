@@ -60,7 +60,16 @@ export class AuthStore {
 
     try {
       await this.authService.register(email, password, displayName);
-      // Sikeres regisztráció után redirect a bejelentkezéshez
+      
+      // Sikeres regisztráció után:
+      // - A felhasználó kijelentkeztetett (az AuthService.register-ben)
+      // - Redirect a bejelentkezéshez
+      this.authState.update((state) => ({
+        ...state,
+        user: null,
+        loading: false,
+        error: null,
+      }));
       this.router.navigate(['/user/login']);
     } catch (error: unknown) {
       const message =
@@ -148,6 +157,40 @@ export class AuthStore {
       user,
       error: null,
     }));
+  }
+
+  /**
+   * Fiók törlése: Firebase Auth + Firestore
+   * @param password Felhasználó jelszava az ujrahitelesítéshez
+   */
+  async deleteAccount(password: string): Promise<void> {
+    this.authState.update((state) => ({ ...state, loading: true, error: null }));
+
+    try {
+      await this.authService.deleteAccount(password);
+      
+      // Sikeres törlés után:
+      // - Felhasználó kijelentkeztetett
+      // - State törlve
+      this.authState.update((state) => ({
+        ...state,
+        user: null,
+        loading: false,
+        error: null,
+      }));
+      
+      // Redirect a főoldalra
+      this.router.navigate(['/']);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Ismeretlen hiba történt.';
+      this.authState.update((state) => ({
+        ...state,
+        loading: false,
+        error: message,
+      }));
+      throw error;
+    }
   }
 }
 

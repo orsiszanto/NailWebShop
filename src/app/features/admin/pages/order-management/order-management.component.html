@@ -1,1 +1,148 @@
-<p>order-management.component works!</p>
+<div class="order-management">
+  <div class="page-header">
+    <h1>Rendeléskezelés</h1>
+    <button class="btn btn-secondary" (click)="loadOrders()" [disabled]="loading()">
+      🔄 Frissítés
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Betöltés...</div>
+  }
+
+  @if (!loading() && orders().length === 0) {
+    <div class="empty-state">
+      <p>Még nincsenek rendelések.</p>
+    </div>
+  }
+
+  @if (!loading() && orders().length > 0) {
+    <div class="table-container">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Rendelés ID</th>
+            <th>Város</th>
+            <th>Összeg</th>
+            <th>Státusz</th>
+            <th>Dátum</th>
+            <th>Műveletek</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of orders(); track order.id) {
+            <tr class="order-row">
+              <td class="cell-id">{{ order.id.substring(0, 8) }}...</td>
+              <td class="cell-city">{{ getShippingCity(order) }}</td>
+              <td class="cell-amount">{{ getTotalAmount(order) | number: '1.0-0' }} Ft</td>
+              <td class="cell-status">
+                <span class="badge" [ngClass]="getStatusClass(order.status)">
+                  {{ getStatusLabel(order.status) }}
+                </span>
+              </td>
+              <td class="cell-date">{{ formatDate(order.orderDate || order.createdAt) }}</td>
+              <td class="cell-actions">
+                <button class="btn btn-sm btn-view" (click)="openDetailModal(order)">
+                  Részletek
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Detail Modal -->
+  @if (isDetailModalOpen()) {
+    <div class="modal-overlay" (click)="closeDetailModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Rendelés részletei</h2>
+          <button class="modal-close" (click)="closeDetailModal()">×</button>
+        </div>
+
+        @if (selectedOrder(); as order) {
+          <div class="modal-body">
+            <!-- Order Info -->
+            <div class="section">
+              <h3>Rendelés információ</h3>
+              <div class="info-grid">
+                <div class="info-row">
+                  <span class="label">Rendelés ID:</span>
+                  <span class="value">{{ order.id }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Dátum:</span>
+                  <span class="value">{{ formatDate(order.orderDate || order.createdAt) }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Összeg:</span>
+                  <span class="value total">{{ getTotalAmount(order) | number: '1.0-0' }} Ft</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipping Info -->
+            <div class="section">
+              <h3>Szállítási információ</h3>
+              <div class="info-grid">
+                <div class="info-row">
+                  <span class="label">Név:</span>
+                  <span class="value">{{ selectedOrder()?.shippingData?.name || '-' }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Cím:</span>
+                  <span class="value">{{ getShippingAddress(order) }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Email:</span>
+                  <span class="value">{{ getShippingEmail(order) }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Telefon:</span>
+                  <span class="value">{{ selectedOrder()?.shippingData?.phone || '-' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Items -->
+            <div class="section">
+              <h3>Rendelés tételei</h3>
+              <div class="items-list">
+                @for (item of order.items; track item.productId) {
+                  <div class="item">
+                    <span class="item-name">{{ item.name }}</span>
+                    <span class="item-qty">{{ item.quantity }}x</span>
+                    <span class="item-price">{{ (item.subtotal) | number: '1.0-0' }} Ft</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Status Update -->
+            <div class="section">
+              <h3>Státusz módosítása</h3>
+              <div class="status-update">
+                <select [(ngModel)]="newStatus" class="form-control">
+                  @for (status of statusOptions; track status.value) {
+                    <option [value]="status.value">{{ status.label }}</option>
+                  }
+                </select>
+                <button class="btn btn-primary" (click)="updateOrderStatus()" [disabled]="loading()">
+                  Státusz frissítése
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeDetailModal()">
+              Bezárás
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+

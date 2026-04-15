@@ -1,1 +1,115 @@
-<p>category-management.component works!</p>
+<div class="category-management">
+  <div class="page-header">
+    <h1>Kategóriakezelés</h1>
+    <button class="btn btn-primary" (click)="openNewCategoryModal()" [disabled]="loading()">
+      + Új kategória
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Betöltés...</div>
+  }
+
+  @if (!loading() && categories().length === 0) {
+    <div class="empty-state">
+      <p>Még nincsenek kategóriák.</p>
+      <button class="btn btn-primary" (click)="openNewCategoryModal()">
+        Első kategória hozzáadása
+      </button>
+    </div>
+  }
+
+  @if (!loading() && categories().length > 0) {
+    <div class="table-container">
+      <table class="categories-table">
+        <thead>
+          <tr>
+            <th>Kategória név</th>
+            <th>Leírás</th>
+            <th>Státusz</th>
+            <th>Műveletek</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (category of categories(); track category.id) {
+            <tr class="category-row">
+              <td class="cell-name">{{ category.name }}</td>
+              <td class="cell-description">{{ category.description }}</td>
+              <td class="cell-status">
+                <span class="badge" [class.badge-active]="category.active" [class.badge-inactive]="!category.active">
+                  {{ category.active ? 'Aktív' : 'Inaktív' }}
+                </span>
+              </td>
+              <td class="cell-actions">
+                <button class="btn btn-sm btn-edit" (click)="openEditModal(category)">
+                  Szerkesztés
+                </button>
+                <button class="btn btn-sm btn-delete" (click)="deleteCategory(category.id)">
+                  Törlés
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Edit/Create Modal -->
+  @if (isEditModalOpen()) {
+    <div class="modal-overlay" (click)="closeEditModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ selectedCategory() ? 'Kategória szerkesztése' : 'Új kategória' }}</h2>
+          <button class="modal-close" (click)="closeEditModal()">×</button>
+        </div>
+
+        <form [formGroup]="categoryForm" class="category-form">
+          <div class="form-group">
+            <label for="name">Kategória név *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="Pl: Lakkok"
+              class="form-control"
+            />
+            @if (getFieldError('name')) {
+              <span class="error-message">{{ getFieldError('name') }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="description">Leírás *</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="Kategória leírása..."
+              rows="4"
+              class="form-control"
+            ></textarea>
+            @if (getFieldError('description')) {
+              <span class="error-message">{{ getFieldError('description') }}</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="active" class="form-checkbox" />
+              <span>Aktív kategória</span>
+            </label>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeEditModal()">
+              Mégse
+            </button>
+            <button type="button" class="btn btn-primary" (click)="saveCategory()" [disabled]="!categoryForm.valid">
+              {{ selectedCategory() ? 'Módosítás' : 'Létrehozás' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+

@@ -216,6 +216,87 @@
             </form>
           </section>
         }
+        <!-- DELETE ACCOUNT SECTION -->
+        <section class="profile-section profile-section--danger">
+          <h2 class="profile-section__title">Fiók törlése</h2>
+          <p class="profile-section__description">
+            Ez a művelet véglegesen törli a fiók adatait. Ez nem visszavonható.
+          </p>
+          <button
+            type="button"
+            class="profile-btn profile-btn--danger"
+            (click)="openDeleteModal()"
+            [disabled]="authLoading()">
+            🗑️ Profil törlése
+          </button>
+        </section>
+      </div>
+    }
+
+    <!-- DELETE ACCOUNT MODAL -->
+    @if (showDeleteModal()) {
+      <div class="modal-overlay" (click)="closeDeleteModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h2 class="modal-title">Profil törlése</h2>
+            <button
+              type="button"
+              class="modal-close"
+              aria-label="Modal bezárása"
+              (click)="closeDeleteModal()">
+              ✕
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <p class="modal-warning">
+              <strong>⚠️ Figyelem!</strong> Ez a műveletnév véglegesen törli a fiók adatait.
+              Ez nem visszavonható!
+            </p>
+
+            <form [formGroup]="deleteForm" (ngSubmit)="confirmDelete()" class="delete-form">
+              <div class="form-group">
+                <label for="delete-password" class="form-label">
+                  Megerősítéshez kérjük add meg a jelszavad:
+                </label>
+                <input
+                  id="delete-password"
+                  type="password"
+                  formControlName="password"
+                  class="form-input"
+                  placeholder="••••••••"
+                  autocomplete="current-password"
+                  [attr.aria-invalid]="deleteForm.get('password')?.invalid && deleteForm.get('password')?.touched"
+                  autofocus />
+                @if (deleteForm.get('password')?.touched && getDeleteFieldError('password')) {
+                  <p class="form-error">{{ getDeleteFieldError('password') }}</p>
+                }
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="profile-btn profile-btn--secondary"
+              (click)="closeDeleteModal()"
+              [disabled]="loading()">
+              Mégse
+            </button>
+            <button
+              type="button"
+              class="profile-btn profile-btn--danger"
+              (click)="confirmDelete()"
+              [disabled]="deleteForm.invalid || loading()"
+              [attr.aria-busy]="loading()">
+              @if (loading()) {
+                Profil törlése...
+              } @else {
+                Profil törlése
+              }
+            </button>
+          </div>
+        </div>
       </div>
     }
 

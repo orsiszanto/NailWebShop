@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ProductCardComponent } from '../../components/product-card/product-card.component';
 import {
   ProductFilterComponent,
@@ -32,7 +33,8 @@ type ProductListItem = {
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss',
 })
-export class ProductListComponent {
+export class ProductListComponent implements OnInit {
+  private activatedRoute = inject(ActivatedRoute);
   isLoading = false;
 
   searchTerm = '';
@@ -166,6 +168,26 @@ export class ProductListComponent {
     },
   ];
 
+  ngOnInit(): void {
+    // Olvassa be a query paramétereket a headerből
+    this.activatedRoute.queryParams.subscribe((params) => {
+      const category = params['category'];
+      const brand = params['brand'];
+      const onSaleOnly = params['onSaleOnly'] === 'true';
+      
+      if (category || brand || onSaleOnly) {
+        this.onFilterChange({
+          category: category || '',
+          brand: brand || '',
+          priceRange: '',
+          sortBy: 'newest',
+          onSaleOnly: onSaleOnly,
+          inStockOnly: false,
+        });
+      }
+    });
+  }
+
   onSearch(term: string): void {
     this.searchTerm = term;
   }
@@ -186,6 +208,17 @@ export class ProductListComponent {
     this.selectedSortBy = 'newest';
     this.onSaleOnly = false;
     this.inStockOnly = false;
+  }
+
+  get currentFilters(): FilterOptions {
+    return {
+      category: this.selectedCategory,
+      brand: this.selectedBrand,
+      priceRange: this.selectedPriceRange,
+      sortBy: this.selectedSortBy,
+      onSaleOnly: this.onSaleOnly,
+      inStockOnly: this.inStockOnly,
+    };
   }
 
   get filteredProducts(): ProductListItem[] {

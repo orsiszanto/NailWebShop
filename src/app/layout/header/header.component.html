@@ -7,14 +7,6 @@
       <div class="site-header__mobile-actions">
         <a
           class="site-header__mobile-action"
-          routerLink="/shop"
-          aria-label="Keresés és termékek megnyitása"
-          (click)="closeMenu()">
-          Keresés
-        </a>
-
-        <a
-          class="site-header__mobile-action"
           routerLink="/cart"
           routerLinkActive="is-active"
           aria-label="Kosár megnyitása"
@@ -38,16 +30,12 @@
     <div class="site-header__desktop">
       <a class="site-header__logo" routerLink="/">Nailshop</a>
 
-      <div class="site-header__search">
-        <app-search-input></app-search-input>
-      </div>
-
       <nav class="site-header__nav" aria-label="Fő navigáció">
         <a
           routerLink="/shop"
-          [queryParams]="{ category: 'ujdonsagok' }"
+          [queryParams]="{ onSaleOnly: 'true' }"
           routerLinkActive="is-active">
-          Újdonságok
+          Akciós termékek
         </a>
 
         <a
@@ -75,6 +63,14 @@
       <!-- Auth actions -->
       <div class="site-header__auth-actions">
         @if (isAuthenticated()) {
+          @if (user()?.role === 'admin') {
+            <a
+              routerLink="/admin/dashboard"
+              class="site-header__admin-link"
+              title="Admin Panel">
+              🔧 Admin
+            </a>
+          }
           <a
             routerLink="/user/profile"
             class="site-header__profile-link"
@@ -125,10 +121,10 @@
         <nav class="mobile-menu__nav" aria-label="Mobil navigáció">
           <a
             routerLink="/shop"
-            [queryParams]="{ category: 'ujdonsagok' }"
+            [queryParams]="{ onSaleOnly: 'true' }"
             routerLinkActive="is-active"
             (click)="closeMenu()">
-            Újdonságok
+            Akciós termékek
           </a>
 
           <a
@@ -166,6 +162,14 @@
         <!-- Mobile Auth Section -->
         <div class="mobile-menu__auth">
           @if (isAuthenticated()) {
+            @if (user()?.role === 'admin') {
+              <a
+                routerLink="/admin/dashboard"
+                class="mobile-menu__auth-link mobile-menu__auth-link--admin"
+                (click)="closeMenu()">
+                🔧 Admin Panel
+              </a>
+            }
             <a
               routerLink="/user/profile"
               class="mobile-menu__auth-link"
@@ -193,99 +197,6 @@
               Bejelentkezés
             </a>
           }
-        </div>
-      </div>
-    </div>
-  }
-
-  <!-- Mobile menu end -->
-  @if (isMenuOpen) {
-    <div class="mobile-menu" id="mobile-menu">
-      <div class="mobile-menu__overlay" (click)="closeMenu()"></div>
-
-      <div class="mobile-menu__panel">
-        <button
-          class="mobile-menu__close"
-          type="button"
-          aria-label="Menü bezárása"
-          (click)="closeMenu()">
-          ✕
-        </button>
-
-        <!-- This div wraps nav and auth for styling purposes -->
-        <div class="mobile-menu__content">
-          <nav class="mobile-menu__nav" aria-label="Mobil navigáció">
-            <a
-              routerLink="/shop"
-              [queryParams]="{ category: 'ujdonsagok' }"
-              routerLinkActive="is-active"
-              (click)="closeMenu()">
-              Újdonságok
-            </a>
-
-            <a
-              routerLink="/shop"
-              [queryParams]="{ category: 'alapanyagok' }"
-              routerLinkActive="is-active"
-              (click)="closeMenu()">
-              Alapanyagok
-            </a>
-
-            <a
-              routerLink="/shop"
-              [queryParams]="{ category: 'lakkok' }"
-              routerLinkActive="is-active"
-              (click)="closeMenu()">
-              Lakkok
-            </a>
-
-            <a
-              routerLink="/shop"
-              [queryParams]="{ category: 'diszitok' }"
-              routerLinkActive="is-active"
-              (click)="closeMenu()">
-              Díszítők
-            </a>
-
-            <a
-              routerLink="/cart"
-              routerLinkActive="is-active"
-              (click)="closeMenu()">
-              Kosár
-            </a>
-          </nav>
-
-          <!-- Mobile Auth Section -->
-          <div class="mobile-menu__auth">
-            @if (isAuthenticated()) {
-              <a
-                routerLink="/user/profile"
-                class="mobile-menu__auth-link"
-                (click)="closeMenu()">
-                <strong>{{ user()?.name }}</strong>
-              </a>
-              <button
-                type="button"
-                class="mobile-menu__auth-btn"
-                (click)="logout()"
-                aria-label="Kijelentkezés">
-                Kijelentkezés
-              </button>
-            } @else {
-              <a
-                routerLink="/user/register"
-                class="mobile-menu__auth-link"
-                (click)="closeMenu()">
-                Regisztráció
-              </a>
-              <a
-                routerLink="/user/login"
-                class="mobile-menu__auth-link mobile-menu__auth-link--primary"
-                (click)="closeMenu()">
-                Bejelentkezés
-              </a>
-            }
-          </div>
         </div>
       </div>
     </div>

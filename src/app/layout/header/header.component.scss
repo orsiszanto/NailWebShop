@@ -177,13 +177,9 @@
 
   .site-header__desktop {
     display: grid;
-    grid-template-columns: auto minmax(220px, 360px) 1fr auto auto auto;
+    grid-template-columns: auto 1fr auto auto auto;
     align-items: center;
     gap: $space-4;
-  }
-
-  .site-header__search {
-    width: 100%;
   }
 
   .site-header__nav {
@@ -219,6 +215,27 @@
     display: flex;
     align-items: center;
     gap: $space-2;
+  }
+
+  .site-header__admin-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: $space-2 $space-3;
+    border: 1px solid #6366f1;
+    border-radius: $radius-md;
+    background-color: #eef2ff;
+    color: #4f46e5;
+    text-decoration: none;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #e0e7ff;
+      border-color: #4f46e5;
+      box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
+    }
   }
 
   .site-header__profile-link {
@@ -334,6 +351,17 @@
 
   &:hover {
     background-color: $color-surface-alt;
+  }
+}
+
+.mobile-menu__auth-link--admin {
+  background-color: #eef2ff;
+  color: #4f46e5;
+  border-color: #6366f1;
+
+  &:hover {
+    background-color: #e0e7ff;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.2);
   }
 }
 

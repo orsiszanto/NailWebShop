@@ -11,10 +11,13 @@ import {
   updatePassword,
   sendPasswordResetEmail,
   sendEmailVerification,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
+  deleteUser,
 } from 'firebase/auth';
 import { auth } from '../firebase/firebase.config';
 import { firestore } from '../firebase/firebase.config';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { Observable, from, switchMap } from 'rxjs';
 import { User } from '../models/user.model';
 
@@ -53,6 +56,10 @@ export class AuthService {
         createdAt: new Date(),
         updatedAt: new Date(),
       });
+
+      // 3. Kijelentkeztetjük az automatikusan bejelentkeztetett felhasználót
+      // (createUserWithEmailAndPassword automatikusan bejelentkeztet)
+      await signOut(auth);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       throw this.mapFirebaseError(err);
@@ -148,6 +155,8 @@ export class AuthService {
         'Túl sok bejelentkezési kísérlet. Próbáld később!',
       'auth/network-request-failed':
         'Hálózati hiba. Ellenőrizd az internetkapcsolatodat!',
+      'auth/invalid-credential': 'Helytelen email vagy jelszó.',
+      'auth/operation-not-allowed': 'Ez a művelettípus nem engedélyezett.',
     };
 
     const message =
@@ -235,6 +244,37 @@ export class AuthService {
       }
 
       await sendEmailVerification(currentUser);
+    } catch (error: unknown) {
+      const err = error as { code?: string; message?: string };
+      throw this.mapFirebaseError(err);
+    }
+  }
+
+  /**
+   * Felhasználó fiók törlése: Firebase Auth + Firestore
+   * Jelszó megerősítés szükséges (reauthenticate)
+   * @param password Felhasználó jelszava az ujrahitelesítéshez
+   * @returns Promise<void>
+   */
+  async deleteAccount(password: string): Promise<void> {
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser || !currentUser.email) {
+        throw new Error('Nincs bejelentkezett felhasználó.');
+      }
+
+      // 1. Ujrahitelesítés a jelszóval (biztonsági oka)
+      const credential = EmailAuthProvider.credential(
+        currentUser.email,
+        password
+      );
+      await reauthenticateWithCredential(currentUser, credential);
+
+      // 2. Firestore dokumentum törlése
+      await deleteDoc(doc(firestore, 'users', currentUser.uid));
+
+      // 3. Firebase Auth felhasználó törlése
+      await deleteUser(currentUser);
     } catch (error: unknown) {
       const err = error as { code?: string; message?: string };
       throw this.mapFirebaseError(err);
