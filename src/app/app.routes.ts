@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
+import { authGuard } from './core/auth/auth-guard';
+import { adminGuard } from './core/auth/admin-guard';
 
 export const routes: Routes = [
   {
     path: 'admin',
+    canActivate: [adminGuard],
     loadChildren: () =>
       import('./features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
   },
@@ -31,6 +34,7 @@ export const routes: Routes = [
       },
       {
         path: 'checkout',
+        canActivate: [authGuard],
         loadComponent: () =>
           import('./features/order/pages/checkout-page/checkout-page.component').then(
             (m) => m.CheckoutPageComponent

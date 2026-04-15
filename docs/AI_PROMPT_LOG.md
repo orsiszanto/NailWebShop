@@ -2,13 +2,13 @@
 
 ## 1. Projekt architektúra és struktúra
 
-**Prompt (lényeg):**
+**Prompt:**
 
 * webshop felépítés tervezése Angular + Firebase stackkel
 * mappastruktúra, core / shared / feature modulok
 * routing struktúra kialakítása
 
-**AI válasz hatása:**
+**Eredmény:**
 
 * kialakult a jelenlegi feature-alapú struktúra
 * külön modulok: shop, cart, order, layout
@@ -203,3 +203,172 @@ Az AI-t nem kódgenerálásra, hanem:
 * UX döntések validálására
 
 használtam.
+
+---
+
+## 13. TypeScript Firestore spread type hibák
+
+**Prompt:**
+
+* TS2698 hiba: "Spread types may only be created from object types"
+* admin-service-ekben doc.data() spread operátor problémája
+
+**AI válasz:**
+
+* `doc.data() as Record<string, unknown>` típusos castolás javaslat
+* firestore QueryDocumentSnapshot<unknown> kezelése
+
+**Döntés:**
+
+* ✅ ELFOGADVA - a cast helyes és type-safe
+* alkalmazva: admin-category.service, admin-order.service, admin-product.service
+* getById() metódusban is külön kezelve
+
+**Eredmény:**
+
+* TS2698 hibák eltűntek
+* type-safe Firestore integrációs
+
+---
+
+## 14. SASS deprecation: darken() → color.adjust()
+
+**Prompt:**
+
+* Dart Sass 3.0 deprecation figyelmeztetés
+* darken() függvény lecserélése
+
+**AI válasz (módosítva):**
+
+* Javasolt: `color.adjust($color, $lightness: -10%)`
+* Szükséges: `@use 'sass:color'` import
+
+**Döntés:**
+
+* ✅ ELFOGADVA - a color modul import szükséges volt
+* ❌ JAVÍTVA - hiányzott a sass:color import, amit az AI nem jelölt rá
+* 6 file: checkout-page, order-detail-page, confirmation-dialog
+
+**Eredmény:**
+
+* Dart Sass compatibilitás 3.0-hoz
+* jövőbiztos SCSS kód
+
+---
+
+## 15. Route guard alkalmazás - checkout védelem
+
+**Prompt:**
+
+* `/checkout` route-ot nem védi authGuard
+* automatikus értékelés kritikája: csak komponensben van logika, nem route-on
+
+**AI válasz:**
+
+* `canActivate: [authGuard]` a route-definícióban
+* admin route-val párhuzamos védelemre
+
+**Döntés:**
+
+* ✅ ELFOGADVA (teljes) - checkout route-a authGuard-dal
+* ✅ ELFOGADVA - admin route adminGuard-dal
+* user/orders, user/profile már védett volt
+
+**Eredmény:**
+
+* Route guard az összes kritikus útvonalون
+* evaluation pont: 1/2 → 2/2 védett útvonalakra
+
+---
+
+## 16. CartStore unit teszt suite
+
+**Prompt:**
+
+* Unit tesztek mennyiségi kritérium: min. 10 pont, jelenleg 9
+* CartStore logika tesztelésére nincsenek tesztek
+
+**AI válasz:**
+
+* 9 érdemi teszt CartStore-hoz
+* addItem, updateQuantity, removeItem, clearCart tesztek
+* computed values (totalItems, totalPrice) validáció
+* localStorage persistence tesztek
+
+**Döntés:**
+
+* ✅ ELFOGADVA (teljes) - CartStore.spec.ts
+* 18+ teszt összességében (order.service 5 + checkout-flow 4 + cart.store 9)
+* evaluation pont: 1/2 → 2/2 unit tesztek
+
+**Eredmény:**
+
+* CartStore logika 100%-ban tesztelt
+* localStorage persistence bizonyított
+
+---
+
+## 17. Firebase Admin key biztonsági hiba
+
+**Prompt:**
+
+* nailshopweb-key.json commitolva van a repóban
+* ezt kell eltávolítani + .gitignore-ba tenni
+
+**AI válasz + Orsolya döntése:**
+
+* `git rm --cached` az indexből eltávolítás
+* `.gitignore` `scripts/*.json` és `scripts/nailshopweb-key.json` hozzáadás
+* megjegyzés: hátrányos a git history-ből teljes eltávolítás → git filter-repo
+
+**Döntés:**
+
+* ✅ ELFOGADVA - gitignore és git rm
+* ⚠️ TUDATOSAN ELFOGADOTT KOMPROMISSZUM - a régi commit még tartalmazza
+* **KRITIKUS AKCIÓV: Firebase Console-ban regenerálni a private key-t**
+
+**Eredmény:**
+
+* evaluation pont: biztonsági terület → SecurityRules + választott key kezelés jó
+
+---
+
+## 🔍 Kritikus gondolkodás: AI korlátok és hibák
+
+### Eset 1: SASS color module hiány
+
+**Mit javasolt az AI?** 
+- `color.adjust()` függvény a SCSS-ben
+- DE: nem említette, hogy szükséges a `@use 'sass:color'` import
+
+**Hogyan kezeltem?**
+- Első fordítás után azonnal láttam a "no module with namespace color" hibát
+- Saját kezdeményezésre hozzáadtam az importot
+- **Tanulság:** Az AI-nak nem volt teljes Dart Sass tudása (2025-ös model cutoff)
+
+### Eset 2: Git filter-repo vs git rm --cached
+
+**Mit javasolt az AI?**
+- Teljes eltávolítás `git filter-repo` vagy `git filter-branch` megoldásokkal
+- DE: veszélyesnek jelölt (history rewrite)
+
+**Hogyan kezeltem?**
+- szándékosan választottam a konzervatív `git rm --cached` utat  
+- tudatosan elfogadtam, hogy a régi commitok még tartalmazzák
+- **Tanulság:** Az AI-nak igaza volt a veszélyekre, de hiányzott a pragmatikus kompromisszum javaslata
+
+---
+
+## 📊 Projekt fejlesztési ív
+
+| Fázis | Promptok | Fő fejlesztés |
+|-------|----------|--------------|
+| 1. Tervezés | 1, 2 | Arch + design tokens |
+| 2. Shop rendszer | 3, 4, 5 | Product list, filter, card |
+| 3. Kosár & Checkout | 6, 7, 8 | CartStore, checkout flow |
+| 4. Routing | 9, 10 | Navigáció, routing struktúra |
+| 5. Optimalizálás | 11, 12 | Typizálás, a11y |
+| **6. Biztonság & Testing** | **13-17** | **Auth guard, unit tests, security** |
+
+A 3. mérföldkőhöz képest a prompt Log már teljes képet összerak az AI felhasználásáról a projekten végig.
+
