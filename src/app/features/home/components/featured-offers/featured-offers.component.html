@@ -2,32 +2,30 @@
   <div class="u-container">
 
     <div class="featured-offers__header">
-      <h2 id="offers-title">Kiemelt ajánlatok</h2>
+      <h2 id="offers-title">Akciós termékek</h2>
 
-      <a routerLink="/shop" [queryParams]="{ category: 'akciok' }">
+      <a routerLink="/shop" [queryParams]="{ sort: 'popular' }">
         Összes megtekintése
       </a>
     </div>
 
-   <div class="featured-offers__grid">
-
-    <app-product-card
-    productId="1"
-      name="Termék neve"
-      [price]="3490"
-      [oldPrice]="4990"
-      imageAlt="Termék neve">
-    </app-product-card>
-
-    <app-product-card
-      productId="2"
-      name="Termék neve"
-      [price]="2990"
-      [oldPrice]="3990"
-      imageAlt="Termék neve">
-    </app-product-card>
-
-</div>
+    @if (loading()) {
+      <app-loading-spinner></app-loading-spinner>
+    } @else if (error()) {
+      <div role="alert">{{ error() }}</div>
+    } @else {
+      <div class="featured-offers__grid">
+        @for (product of products(); track product.id) {
+          <app-product-card
+            [productId]="product.id"
+            [name]="product.name"
+            [price]="product.price"
+            [oldPrice]="product.oldPrice || null"
+            [imageAlt]="product.name">
+          </app-product-card>
+        }
+      </div>
+    }
 
   </div>
 </section>

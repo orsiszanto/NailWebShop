@@ -3,34 +3,75 @@ service cloud.firestore {
   match /databases/{database}/documents {
     // Felhasználók gyűjtemény
     match /users/{userId} {
-      allow read, write: if request.auth.uid == userId;
+      allow read, write: if request.auth.uid == userId
+        && validateUserData(request.data);
       allow read: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
 
     // Termékek gyűjtemény - mindenki olvashat
     match /products/{productId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        && validateProductData(request.data);
     }
 
     // Kategóriák gyűjtemény - mindenki olvashat
     match /categories/{categoryId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        && validateCategoryData(request.data);
     }
 
     // Rendelések gyűjtemény - bejelentkezett felhasználók olvashatnak
     match /orders/{orderId} {
       allow read: if request.auth != null && (request.auth.uid == resource.data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
-      allow create: if request.auth != null;
-      allow update: if request.auth != null && (request.auth.uid == resource.data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      allow create: if request.auth != null && validateOrderData(request.data);
+      allow update: if request.auth != null && (request.auth.uid == resource.data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+        && validateOrderData(request.data);
       allow delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
       
       // Rendelési tételek algyűjtemény
       match /items/{itemId} {
-        allow read, create: if request.auth != null && (request.auth.uid == get(/databases/$(database)/documents/orders/$(orderId)).data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+        allow read, create: if request.auth != null && (request.auth.uid == get(/databases/$(database)/documents/orders/$(orderId)).data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+          && validateOrderItemData(request.data);
         allow update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
       }
+    }
+
+    // Validációs függvények
+    function validateUserData(data) {
+      return data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
+        && data.name.size() >= 2 && data.name.size() <= 100
+        && (!data.phone.exists() || (data.phone.size() >= 7 && data.phone.size() <= 20))
+        && (!data.address.exists() || data.address.size() <= 200);
+    }
+
+    function validateProductData(data) {
+      return data.name.size() >= 2 && data.name.size() <= 100
+        && data.price >= 0
+        && (!data.description.exists() || data.description.size() <= 1000)
+        && data.category.size() >= 1;
+    }
+
+    function validateCategoryData(data) {
+      return data.name.size() >= 1 && data.name.size() <= 50
+        && (!data.description.exists() || data.description.size() <= 500);
+    }
+
+    function validateOrderData(data) {
+      return data.userId.size() > 0
+        && data.shippingData.name.size() >= 2
+        && data.shippingData.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
+        && data.shippingData.phone.size() >= 7 && data.shippingData.phone.size() <= 20
+        && data.shippingData.address.size() >= 5
+        && data.total >= 0;
+    }
+
+    function validateOrderItemData(data) {
+      return data.productId.size() > 0
+        && data.quantity > 0 && data.quantity <= 1000
+        && data.price >= 0
+        && data.name.size() >= 1;
     }
   }
 }

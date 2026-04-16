@@ -9,37 +9,23 @@
       </a>
     </div>
 
-    <div class="favorite-products__grid">
-
-  <app-product-card
-    productId="1"
-    name="Termék neve"
-    [price]="3990"
-    imageAlt="Termék neve">
-  </app-product-card>
-
-  <app-product-card
-    productId="2"
-    name="Termék neve"
-    [price]="2490"
-    imageAlt="Termék neve">
-  </app-product-card>
-
-  <app-product-card
-    productId="3"
-    name="Termék neve"
-    [price]="4290"
-    imageAlt="Termék neve">
-  </app-product-card>
-
-  <app-product-card
-    productId="4"
-    name="Termék neve"
-    [price]="3190"
-    imageAlt="Termék neve">
-  </app-product-card>
-
-</div>
+    @if (loading()) {
+      <app-loading-spinner></app-loading-spinner>
+    } @else if (error()) {
+      <div role="alert">{{ error() }}</div>
+    } @else {
+      <div class="favorite-products__grid">
+        @for (product of products(); track product.id) {
+          <app-product-card
+            [productId]="product.id"
+            [name]="product.name"
+            [price]="product.price"
+            [oldPrice]="product.oldPrice || null"
+            [imageAlt]="product.name">
+          </app-product-card>
+        }
+      </div>
+    }
 
   </div>
 </section>

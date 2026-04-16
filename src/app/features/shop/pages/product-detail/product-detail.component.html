@@ -4,112 +4,106 @@
       ← Vissza a shophoz
     </a>
 
-    <div class="product-detail__layout">
-      <div class="product-detail__gallery">
-        <div class="product-detail__main-image">
-          <img
-            [src]="images[selectedImageIndex].src"
-            [alt]="images[selectedImageIndex].alt" />
+    @if (loading()) {
+      <app-loading-spinner></app-loading-spinner>
+    } @else if (error()) {
+      <div role="alert" class="product-detail__error">
+        {{ error() }}
+      </div>
+    } @else if (product()) {
+      <div class="product-detail__layout">
+        <div class="product-detail__gallery">
+          <div class="product-detail__main-image">
+            <img
+              [src]="images()[selectedImageIndex()].src"
+              [alt]="images()[selectedImageIndex()].alt" />
+          </div>
+
+          <div class="product-detail__thumbnails" aria-label="Termékképek">
+            @for (image of images(); track image.src; let i = $index) {
+              <button
+                type="button"
+                class="product-detail__thumbnail"
+                [class.is-active]="selectedImageIndex() === i"
+                (click)="selectImage(i)"
+                [attr.aria-label]="'Kép kiválasztása: ' + image.alt">
+                <img [src]="image.src" [alt]="image.alt" />
+              </button>
+            }
+          </div>
         </div>
 
-        <div class="product-detail__thumbnails" aria-label="Termékképek">
-          @for (image of images; track image.src; let i = $index) {
-            <button
-              type="button"
-              class="product-detail__thumbnail"
-              [class.is-active]="selectedImageIndex === i"
-              (click)="selectImage(i)"
-              [attr.aria-label]="'Kép kiválasztása: ' + image.alt">
-              <img [src]="image.src" [alt]="image.alt" />
-            </button>
-          }
+        <div class="product-detail__summary">
+          <p class="product-detail__brand">{{ product()?.category }}</p>
+
+          <h1 class="product-detail__title">{{ product()?.name }}</h1>
+
+          <div class="product-detail__price">
+            <span class="product-detail__old-price">{{ formatPrice(product()?.oldPrice) }}</span>
+            <span class="product-detail__current-price">{{ formatPrice(product()?.price) }}</span>
+          </div>
+
+          <p class="product-detail__stock product-detail__stock--available">
+            {{ product()?.active ? 'Készleten' : 'Nem elérhető' }}
+          </p>
+
+          <p class="product-detail__short-description">
+            {{ product()?.description }}
+          </p>
+
+          <div class="product-detail__purchase">
+            <app-add-to-cart
+              [productId]="product()?.id || ''"
+              [productName]="product()?.name || ''"
+              [productPrice]="product()?.price || 0"
+              [productOldPrice]="product()?.oldPrice || null"
+              [productImageAlt]="product()?.name || ''">
+            </app-add-to-cart>
+          </div>
         </div>
       </div>
 
-      <div class="product-detail__summary">
-        <p class="product-detail__brand">{{ product.brand }}</p>
+      <div class="product-detail__info-grid">
+        <section class="product-detail__info-card" aria-labelledby="description-title">
+          <h2 id="description-title">Részletes leírás</h2>
 
-        <h1 class="product-detail__title">{{ product.name }}</h1>
+          <p>
+            {{ product()?.description }}
+          </p>
 
-        <div class="product-detail__price">
-          <span class="product-detail__old-price">{{ formatPrice(product.oldPrice) }}</span>
-          <span class="product-detail__current-price">{{ formatPrice(product.price) }}</span>
-        </div>
+          <ul class="product-detail__description-list">
+            <li>Professzionális minőség</li>
+            <li>Tartós és megbízható</li>
+            <li>Könnyen kezelhető</li>
+          </ul>
+        </section>
 
-        <p class="product-detail__stock product-detail__stock--available">
-          {{ product.inStockLabel }}
-        </p>
+        <section class="product-detail__info-card" aria-labelledby="details-title">
+          <h2 id="details-title">Termékjellemzők</h2>
 
-        <p class="product-detail__short-description">
-          Elegáns, visszafogott nude pink árnyalat, amely tökéletes választás
-          mindennapi viselethez és letisztult, prémium megjelenéshez.
-        </p>
+          <dl class="product-detail__specs">
+            <div class="product-detail__spec-row">
+              <dt>Kategória</dt>
+              <dd>{{ product()?.category }}</dd>
+            </div>
 
-        <div class="product-detail__purchase">
-          <app-add-to-cart
-            [productId]="product.id"
-            [productName]="product.name"
-            [productPrice]="product.price"
-            [productOldPrice]="product.oldPrice"
-            [productImageAlt]="product.imageAlt">
-          </app-add-to-cart>
-        </div>
+            <div class="product-detail__spec-row">
+              <dt>Ár</dt>
+              <dd>{{ formatPrice(product()?.price) }}</dd>
+            </div>
+
+            <div class="product-detail__spec-row">
+              <dt>Készlet</dt>
+              <dd>{{ product()?.stock }} db</dd>
+            </div>
+
+            <div class="product-detail__spec-row">
+              <dt>Elérhetőség</dt>
+              <dd>{{ product()?.active ? 'Elérhető' : 'Nem elérhető' }}</dd>
+            </div>
+          </dl>
+        </section>
       </div>
-    </div>
-
-    <div class="product-detail__info-grid">
-      <section class="product-detail__info-card" aria-labelledby="description-title">
-        <h2 id="description-title">Részletes leírás</h2>
-
-        <p>
-          A Nude Pink Gél Lakk finom, természetes árnyalatával elegáns és ápolt
-          megjelenést biztosít. Ideális választás nude szettekhez, francia alaphoz
-          vagy visszafogott, prémium manikűrhöz.
-        </p>
-
-        <p>
-          Könnyen felvihető, egyenletes fedést biztosít, és tartós, fényes
-          végeredményt nyújt. Professzionális és otthoni használatra egyaránt
-          megfelelő választás.
-        </p>
-
-        <ul class="product-detail__description-list">
-          <li>Egységes fedés és könnyű kezelhetőség</li>
-          <li>Tartós, fényes finish</li>
-          <li>Letisztult, elegáns nude pink árnyalat</li>
-        </ul>
-      </section>
-
-      <section class="product-detail__info-card" aria-labelledby="details-title">
-        <h2 id="details-title">Termékjellemzők</h2>
-
-        <dl class="product-detail__specs">
-          <div class="product-detail__spec-row">
-            <dt>Márka</dt>
-            <dd>{{ product.brand }}</dd>
-          </div>
-
-          <div class="product-detail__spec-row">
-            <dt>Kategória</dt>
-            <dd>{{ product.category }}</dd>
-          </div>
-
-          <div class="product-detail__spec-row">
-            <dt>Kiszerelés</dt>
-            <dd>{{ product.size }}</dd>
-          </div>
-
-          <div class="product-detail__spec-row">
-            <dt>Szín</dt>
-            <dd>{{ product.color }}</dd>
-          </div>
-
-          <div class="product-detail__spec-row">
-            <dt>Elérhetőség</dt>
-            <dd>{{ product.inStockLabel }}</dd>
-          </div>
-        </dl>
-      </section>
-    </div>
+    }
   </div>
 </section>

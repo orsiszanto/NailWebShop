@@ -12,6 +12,7 @@ export const ADMIN_ROUTES: Routes = [
       {
         path: 'dashboard',
         component: AdminDashboardComponent,
+        canActivate: [adminGuard],
       },
       {
         path: 'products',
@@ -19,6 +20,7 @@ export const ADMIN_ROUTES: Routes = [
           import('./pages/product-management/product-management.component').then(
             (m) => m.ProductManagementComponent
           ),
+        canActivate: [adminGuard],
       },
       {
         path: 'categories',
@@ -26,6 +28,7 @@ export const ADMIN_ROUTES: Routes = [
           import('./pages/category-management/category-management.component').then(
             (m) => m.CategoryManagementComponent
           ),
+        canActivate: [adminGuard],
       },
       {
         path: 'orders',
@@ -33,6 +36,7 @@ export const ADMIN_ROUTES: Routes = [
           import('./pages/order-management/order-management.component').then(
             (m) => m.OrderManagementComponent
           ),
+        canActivate: [adminGuard],
       },
       {
         path: '',

@@ -4,6 +4,7 @@ import { TopBarComponent } from '../top-bar/top-bar.component';
 import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
+import { NotificationContainerComponent } from '../../shared/components/notification-container/notification-container.component';
 
 @Component({
   selector: 'app-shell',
@@ -14,6 +15,7 @@ import { ConfirmationDialogComponent } from '../../shared/components/confirmatio
     HeaderComponent,
     FooterComponent,
     ConfirmationDialogComponent,
+    NotificationContainerComponent,
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
