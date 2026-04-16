@@ -1,77 +1,250 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Felhasználók gyűjtemény
-    match /users/{userId} {
-      allow read, write: if request.auth.uid == userId
-        && validateUserData(request.data);
-      allow read: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+
+    /* =========================
+       Helper functions
+    ========================= */
+
+    function signedIn() {
+      return request.auth != null;
     }
 
-    // Termékek gyűjtemény - mindenki olvashat
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function isAdmin() {
+      return signedIn() &&
+        userDoc().data.role == 'admin';
+    }
+
+    function isOwner(userId) {
+      return signedIn() &&
+        request.auth.uid == userId;
+    }
+
+    /* =========================
+       Users
+    ========================= */
+
+    match /users/{userId} {
+
+      // saját profil vagy admin
+      allow read: if isOwner(userId) || isAdmin();
+
+      // saját profil létrehozás / módosítás / törlés
+      allow create, update: if isOwner(userId) &&
+        validateUserData(request.resource.data);
+
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
+    /* =========================
+       Products
+    ========================= */
+
     match /products/{productId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
-        && validateProductData(request.data);
+
+      allow create, update, delete: if isAdmin() &&
+        validateProductData(request.resource.data);
     }
 
-    // Kategóriák gyűjtemény - mindenki olvashat
+    /* =========================
+       Categories
+    ========================= */
+
     match /categories/{categoryId} {
       allow read: if true;
-      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
-        && validateCategoryData(request.data);
+
+      allow create, update, delete: if isAdmin() &&
+        validateCategoryData(request.resource.data);
     }
 
-    // Rendelések gyűjtemény - bejelentkezett felhasználók olvashatnak
+    /* =========================
+       Orders
+    ========================= */
+
     match /orders/{orderId} {
-      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
-      allow create: if request.auth != null && validateOrderData(request.data);
-      allow update: if request.auth != null && (request.auth.uid == resource.data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
-        && validateOrderData(request.data);
-      allow delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
-      
-      // Rendelési tételek algyűjtemény
+
+      // csak tulaj vagy admin
+      allow read: if signedIn() &&
+        (isOwner(resource.data.userId) || isAdmin());
+
+      // rendelést csak magának hozhat létre
+      allow create: if signedIn() &&
+        request.resource.data.userId == request.auth.uid &&
+        validateOrderData(request.resource.data);
+
+      // tulaj vagy admin módosíthat
+      allow update: if signedIn() &&
+        (isOwner(resource.data.userId) || isAdmin()) &&
+        request.resource.data.userId == resource.data.userId &&
+        validateOrderData(request.resource.data);
+
+      // törölni csak admin
+      allow delete: if isAdmin();
+
+      /* =========================
+         Order Items Subcollection
+      ========================= */
+
       match /items/{itemId} {
-        allow read, create: if request.auth != null && (request.auth.uid == get(/databases/$(database)/documents/orders/$(orderId)).data.userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
-          && validateOrderItemData(request.data);
-        allow update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+
+        function parentOrder() {
+          return get(/databases/$(database)/documents/orders/$(orderId));
+        }
+
+        allow read: if signedIn() &&
+          (isOwner(parentOrder().data.userId) || isAdmin());
+
+        allow create: if signedIn() &&
+          (isOwner(parentOrder().data.userId) || isAdmin()) &&
+          validateOrderItemData(request.resource.data);
+
+        allow update, delete: if isAdmin();
       }
     }
 
-    // Validációs függvények
+    /* =========================
+       Validation Functions
+    ========================= */
+
     function validateUserData(data) {
-      return data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
-        && data.name.size() >= 2 && data.name.size() <= 100
-        && (!data.phone.exists() || (data.phone.size() >= 7 && data.phone.size() <= 20))
-        && (!data.address.exists() || data.address.size() <= 200);
+      return
+        data.keys().hasOnly([
+          'name',
+          'email',
+          'phone',
+          'address',
+          'role'
+        ]) &&
+
+        data.name is string &&
+        data.name.size() >= 2 &&
+        data.name.size() <= 100 &&
+
+        data.email is string &&
+        data.email.matches(
+          '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
+        ) &&
+
+        (!('phone' in data) ||
+          (
+            data.phone is string &&
+            data.phone.size() >= 7 &&
+            data.phone.size() <= 20
+          )) &&
+
+        (!('address' in data) ||
+          (
+            data.address is string &&
+            data.address.size() <= 200
+          )) &&
+
+        (!('role' in data) ||
+          data.role in ['user', 'admin']);
     }
 
     function validateProductData(data) {
-      return data.name.size() >= 2 && data.name.size() <= 100
-        && data.price >= 0
-        && (!data.description.exists() || data.description.size() <= 1000)
-        && data.category.size() >= 1;
+      return
+        data.keys().hasOnly([
+          'name',
+          'price',
+          'description',
+          'category',
+          'imageUrl'
+        ]) &&
+
+        data.name is string &&
+        data.name.size() >= 2 &&
+        data.name.size() <= 100 &&
+
+        data.price is number &&
+        data.price >= 0 &&
+
+        data.category is string &&
+        data.category.size() >= 1 &&
+
+        (!('description' in data) ||
+          (
+            data.description is string &&
+            data.description.size() <= 1000
+          ));
     }
 
     function validateCategoryData(data) {
-      return data.name.size() >= 1 && data.name.size() <= 50
-        && (!data.description.exists() || data.description.size() <= 500);
+      return
+        data.keys().hasOnly([
+          'name',
+          'description'
+        ]) &&
+
+        data.name is string &&
+        data.name.size() >= 1 &&
+        data.name.size() <= 50 &&
+
+        (!('description' in data) ||
+          (
+            data.description is string &&
+            data.description.size() <= 500
+          ));
     }
 
     function validateOrderData(data) {
-      return data.userId.size() > 0
-        && data.shippingData.name.size() >= 2
-        && data.shippingData.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
-        && data.shippingData.phone.size() >= 7 && data.shippingData.phone.size() <= 20
-        && data.shippingData.address.size() >= 5
-        && data.total >= 0;
+      return
+        data.keys().hasOnly([
+          'userId',
+          'shippingData',
+          'total',
+          'status',
+          'createdAt'
+        ]) &&
+
+        data.userId is string &&
+        data.userId == request.auth.uid &&
+
+        data.total is number &&
+        data.total >= 0 &&
+
+        data.shippingData.name is string &&
+        data.shippingData.name.size() >= 2 &&
+
+        data.shippingData.email is string &&
+        data.shippingData.email.matches(
+          '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
+        ) &&
+
+        data.shippingData.phone is string &&
+        data.shippingData.phone.size() >= 7 &&
+        data.shippingData.phone.size() <= 20 &&
+
+        data.shippingData.address is string &&
+        data.shippingData.address.size() >= 5;
     }
 
     function validateOrderItemData(data) {
-      return data.productId.size() > 0
-        && data.quantity > 0 && data.quantity <= 1000
-        && data.price >= 0
-        && data.name.size() >= 1;
+      return
+        data.keys().hasOnly([
+          'productId',
+          'name',
+          'price',
+          'quantity'
+        ]) &&
+
+        data.productId is string &&
+        data.productId.size() > 0 &&
+
+        data.name is string &&
+        data.name.size() >= 1 &&
+
+        data.price is number &&
+        data.price >= 0 &&
+
+        data.quantity is int &&
+        data.quantity > 0 &&
+        data.quantity <= 1000;
     }
   }
 }
