@@ -3,16 +3,27 @@
 
 .skip-link {
   position: absolute;
-  top: -40px;
-  left: 0;
-  padding: $space-2 $space-4;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
   background: $color-text-primary;
   color: $color-surface;
-  z-index: 1000;
+  z-index: 9999;
+  padding: $space-2 $space-4;
+  text-decoration: none;
+  border: 2px solid $color-accent;
 }
 
-.skip-link:focus {
+.skip-link:focus,
+.skip-link:focus-visible {
+  position: fixed;
+  left: 0;
   top: 0;
+  width: auto;
+  height: auto;
+  outline: none;
 }
 
 :focus-visible {
