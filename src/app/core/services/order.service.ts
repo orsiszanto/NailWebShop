@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { firebaseApp } from '../firebase/firebase.config';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore, Timestamp } from 'firebase/firestore';
 import {
   collection,
   query,
@@ -176,31 +176,26 @@ export class OrderService {
   ): Promise<string> {
     try {
       // 1. Rendelés dokumentum létrehozása
+      // FONTOS: Az orderData csak azokat a mezőket tartalmazza, amelyeket a Firestore rules engedélyez!
       const orderData = {
         userId,
         status: 'pending' as OrderStatus,
         total,
         shippingData,
-        notes: '',
-        orderDate: serverTimestamp(),
         createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
       };
 
       const orderRef = await addDoc(collection(this.firestore, 'orders'), orderData);
       const orderId = orderRef.id;
 
       // 2. Rendelés tételeinek hozzáadása (items subcollection)
+      // FONTOS: Az itemData csak azokat a mezőket tartalmazza, amelyeket a Firestore rules engedélyez!
       for (const cartItem of cartItems) {
-        const itemData: OrderItem = {
-          id: crypto.randomUUID(),
+        const itemData = {
           productId: cartItem.productId,
           quantity: cartItem.quantity,
           name: cartItem.name || cartItem.product?.name || '',
           price: cartItem.price || cartItem.product?.price || 0,
-          image: cartItem.image || cartItem.product?.image,
-          unitPrice: cartItem.unitPrice,
-          subtotal: cartItem.subtotal,
         };
 
         await addDoc(
@@ -219,13 +214,31 @@ export class OrderService {
 
   /**
    * Formázott dátum
-   * @param date Dátum objektum
+   * @param date Dátum objektum (Date, Firestore Timestamp, vagy bármi más)
    * @returns Formázott dátum string (pl: "2026. április 14.")
    */
-  formatDate(date: Date | undefined): string {
+  formatDate(date: any): string {
     if (!date) return '-';
 
-    const d = date instanceof Date ? date : new Date(date);
+    let d: Date;
+
+    // Firestore Timestamp objektum kezelése
+    if (date && typeof date === 'object' && 'toDate' in date) {
+      // Firestore Timestamp típus
+      d = (date as Timestamp).toDate();
+    } else if (date instanceof Date) {
+      d = date;
+    } else {
+      try {
+        d = new Date(date);
+        if (isNaN(d.getTime())) {
+          return '-';
+        }
+      } catch {
+        return '-';
+      }
+    }
+
     return d.toLocaleDateString('hu-HU', {
       year: 'numeric',
       month: 'long',

@@ -115,8 +115,14 @@ export class ProfilePageComponent implements OnInit {
         this.profileState.update((state) => ({
           ...state,
           orders: orders.sort(
-            (a, b) =>
-              new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime()
+            (a, b) => {
+              const dateA = a.orderDate || a.createdAt;
+              const dateB = b.orderDate || b.createdAt;
+              
+              if (!dateA || !dateB) return 0;
+              
+              return new Date(dateB).getTime() - new Date(dateA).getTime();
+            }
           ),
           loading: false,
         }));

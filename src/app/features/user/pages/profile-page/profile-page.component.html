@@ -323,7 +323,7 @@
                   <div class="order-item__header" (click)="selectOrder(order.id)">
                     <div class="order-item__info">
                       <h3 class="order-item__title">Rendelés #{{ order.id.slice(-8).toUpperCase() }}</h3>
-                      <p class="order-item__date">{{ formatDate(order.orderDate) }}</p>
+                      <p class="order-item__date">{{ formatDate(order.orderDate || order.createdAt) }}</p>
                     </div>
                     <div class="order-item__meta">
                       <span class="order-item__status" [class]="'status--' + order.status">

@@ -26,7 +26,7 @@
         <div class="order-detail-title-section">
           <h1 class="order-detail-title">Megrendelés #{{ order()!.id }}</h1>
           <p class="order-detail-date">
-            Dátum: {{ formatDate(order()!.orderDate) }}
+            Dátum: {{ formatDate(order()!.orderDate || order()!.createdAt) }}
           </p>
         </div>
         <div class="order-detail-status">
@@ -138,7 +138,7 @@
                 <div class="timeline-marker"></div>
                 <div class="timeline-content">
                   <p class="timeline-label">Megrendelés</p>
-                  <p class="timeline-date">{{ formatDate(order()!.orderDate) }}</p>
+                  <p class="timeline-date">{{ formatDate(order()!.orderDate || order()!.createdAt) }}</p>
                 </div>
               </div>
 

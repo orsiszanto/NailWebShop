@@ -92,6 +92,13 @@ export class CheckoutPageComponent implements OnInit {
         zipCode: this.checkoutForm.value.zipCode,
       };
 
+      console.log('[CheckoutPageComponent] Rendelés létrehozása...', {
+        userId,
+        shippingData,
+        totalPrice: this.totalPrice(),
+        itemsCount: this.items().length,
+      });
+
       // Create order in Firestore
       const orderId = await this.orderService.createOrder(
         userId,
@@ -100,20 +107,32 @@ export class CheckoutPageComponent implements OnInit {
         this.totalPrice()
       );
 
+      console.log('[CheckoutPageComponent] Rendelés sikeresen létrehozva:', orderId);
+
       // Clear cart after successful order
       this.cartStore.clearCart();
 
+      // Set success state
+      this.state.set({ loading: false, error: null });
+
+      // Show success notification
       this.notificationService.showSuccess('Rendelés sikeresen leadva!');
 
       // Redirect to success/order details page
       setTimeout(() => {
+        console.log('[CheckoutPageComponent] Redirect to order details:', orderId);
         this.router.navigate(['/user/orders', orderId]);
       }, 1500);
     } catch (error) {
+      console.error('[CheckoutPageComponent] Rendelés feldolgozása sikertelen:', error);
       const message =
         error instanceof Error ? error.message : 'Ismeretlen hiba történt.';
-      this.notificationService.showError(message);
+      
+      // Set error state
       this.state.set({ loading: false, error: message });
+      
+      // Show error notification
+      this.notificationService.showError(message);
     }
   }
 }

@@ -21,7 +21,7 @@ export interface Order {
   notes?: string; // Opcionális megjegyzés a rendeléshez
 
   // Audit mezők
-  orderDate: Date; // Rendelés időpontja
+  orderDate?: Date; // Rendelés időpontja (opcionális - helyette createdAt-ot használ az app)
   createdAt?: Date; // Rendelés létrehozásának dátuma
   updatedAt?: Date; // Utolsó módosítás dátuma
 }
