@@ -1,10 +1,14 @@
-import { Component, OnInit, inject, signal, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AddToCartComponent } from '../../components/add-to-cart/add-to-cart.component';
 import { Product } from '../../../../core/models/product.model';
 import { ProductService } from '../../data-access/product.service';
+import { MOCK_PRODUCTS } from '../../data-access/mock-products';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import { CommonModule } from '@angular/common';
+import { Subject } from 'rxjs';
+import { takeUntil, switchMap, tap, catchError } from 'rxjs/operators';
+import { from, of } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail',
@@ -14,9 +18,10 @@ import { CommonModule } from '@angular/common';
   styleUrl: './product-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductDetailComponent implements OnInit {
+export class ProductDetailComponent implements OnInit, OnDestroy {
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  private destroy$ = new Subject<void>();
 
   readonly selectedImageIndex = signal(0);
   readonly product = signal<Product | null>(null);
@@ -29,47 +34,75 @@ export class ProductDetailComponent implements OnInit {
     this.loadProduct();
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   private loadProduct(): void {
-    this.loading.set(true);
-    this.error.set(null);
+    this.activatedRoute.params
+      .pipe(
+        tap(() => {
+          this.loading.set(true);
+          this.error.set(null);
+          this.product.set(null);
+          this.selectedImageIndex.set(0);
+        }),
+        switchMap((params) => {
+          const productId = params['id'];
+          if (!productId) {
+            const errorMessage = 'Termék ID nem található.';
+            this.error.set(errorMessage);
+            this.loading.set(false);
+            return from(Promise.reject(new Error(errorMessage)));
+          }
+          // Próbálja betölteni az adatbázisból, fallback a mock adatokra
+          return from(this.productService.getById(productId)).pipe(
+            catchError(() => {
+              // Ha az adatbázisból nem sikerül, próbálja a mock adatokból
+              const mockProduct = MOCK_PRODUCTS.find((p) => p.id === productId);
+              if (mockProduct) {
+                return of(mockProduct as Product);
+              }
+              return from(Promise.reject(new Error('Termék nem található.')));
+            })
+          );
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (product) => {
+          this.product.set(product);
 
-    this.activatedRoute.params.subscribe(async (params) => {
-      try {
-        const productId = params['id'];
-        if (!productId) {
-          throw new Error('Termék ID nem található.');
-        }
+          // Mock images (Firebase-ben szokják tárolni az URL-eket)
+          this.images.set([
+            {
+              src: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=1200&auto=format&fit=crop',
+              alt: `${product.name} - fő kép`,
+            },
+            {
+              src: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1200&auto=format&fit=crop',
+              alt: `${product.name} - közelebbi nézet`,
+            },
+            {
+              src: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop',
+              alt: `${product.name} - használat közben`,
+            },
+            {
+              src: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1200&auto=format&fit=crop',
+              alt: `${product.name} - csomagolás`,
+            },
+          ]);
 
-        const product = await this.productService.getById(productId);
-        this.product.set(product);
-
-        // Mock images (Firebase-ben szokják tárolni az URL-eket)
-        this.images.set([
-          {
-            src: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?q=80&w=1200&auto=format&fit=crop',
-            alt: `${product.name} - fő kép`,
-          },
-          {
-            src: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?q=80&w=1200&auto=format&fit=crop',
-            alt: `${product.name} - közelebbi nézet`,
-          },
-          {
-            src: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1200&auto=format&fit=crop',
-            alt: `${product.name} - használat közben`,
-          },
-          {
-            src: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?q=80&w=1200&auto=format&fit=crop',
-            alt: `${product.name} - csomagolás`,
-          },
-        ]);
-
-        this.loading.set(false);
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Ismeretlen hiba történt';
-        this.error.set(errorMessage);
-        this.loading.set(false);
-      }
-    });
+          this.loading.set(false);
+        },
+        error: (err) => {
+          console.error('ProductDetailComponent: Hiba a termék betöltésénél:', err);
+          const errorMessage = err instanceof Error ? err.message : 'Nem sikerült betölteni a terméket.';
+          this.error.set(errorMessage);
+          this.loading.set(false);
+        },
+      });
   }
 
   formatPrice(value: number | null | undefined): string {

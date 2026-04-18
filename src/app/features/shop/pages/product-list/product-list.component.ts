@@ -8,6 +8,7 @@ import {
 import { ProductSearchComponent } from '../../components/product-search/product-search.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import { MOCK_PRODUCTS } from '../../data-access/mock-products';
 
 type ProductListItem = {
   id: string;
@@ -47,128 +48,17 @@ export class ProductListComponent implements OnInit {
   readonly onSaleOnly = signal(false);
   readonly inStockOnly = signal(false);
 
-  readonly products: ProductListItem[] = [
-    {
-      id: '1',
-      name: 'Crystal Nails Compact Base Gel',
-      price: 3990,
-      oldPrice: null,
-      imageAlt: 'Crystal Nails Compact Base Gel termék képe',
-      category: 'alapanyagok',
-      brand: 'crystal-nails',
-      inStock: true,
-    },
-    {
-      id: '2',
-      name: 'Moyra Gel Polish Nude Pink',
-      price: 2490,
-      oldPrice: 2990,
-      imageAlt: 'Moyra Gel Polish Nude Pink termék képe',
-      category: 'lakkok',
-      brand: 'moyra',
-      inStock: true,
-    },
-    {
-      id: '3',
-      name: 'Perfect Nails Primer',
-      price: 1890,
-      oldPrice: null,
-      imageAlt: 'Perfect Nails Primer termék képe',
-      category: 'alapanyagok',
-      brand: 'indigo',
-      inStock: true,
-    },
-    {
-      id: '4',
-      name: 'Cover Pink Builder Gel',
-      price: 4590,
-      oldPrice: null,
-      imageAlt: 'Cover Pink Builder Gel termék képe',
-      category: 'alapanyagok',
-      brand: 'crystal-nails',
-      inStock: true,
-    },
-    {
-      id: '5',
-      name: 'Top Shine No Wipe',
-      price: 2790,
-      oldPrice: null,
-      imageAlt: 'Top Shine No Wipe termék képe',
-      category: 'alapanyagok',
-      brand: 'moyra',
-      inStock: true,
-    },
-    {
-      id: '6',
-      name: 'Nail Prep folyadék',
-      price: 1590,
-      oldPrice: null,
-      imageAlt: 'Nail Prep folyadék termék képe',
-      category: 'alapanyagok',
-      brand: 'indigo',
-      inStock: false,
-    },
-    {
-      id: '7',
-      name: 'Gél lakk Bordeaux Red',
-      price: 2690,
-      oldPrice: 2990,
-      imageAlt: 'Gél lakk Bordeaux Red termék képe',
-      category: 'lakkok',
-      brand: 'moyra',
-      inStock: true,
-    },
-    {
-      id: '8',
-      name: 'Matt Top Gel',
-      price: 2590,
-      oldPrice: null,
-      imageAlt: 'Matt Top Gel termék képe',
-      category: 'alapanyagok',
-      brand: 'crystal-nails',
-      inStock: true,
-    },
-    {
-      id: '9',
-      name: 'Reszelő 100/180',
-      price: 390,
-      oldPrice: null,
-      imageAlt: 'Reszelő 100/180 termék képe',
-      category: 'eszkozok',
-      brand: 'indigo',
-      inStock: true,
-    },
-    {
-      id: '10',
-      name: 'Cuticle Oil Cherry',
-      price: 1290,
-      oldPrice: null,
-      imageAlt: 'Cuticle Oil Cherry termék képe',
-      category: 'alapanyagok',
-      brand: 'crystal-nails',
-      inStock: true,
-    },
-    {
-      id: '11',
-      name: 'Akril ecset',
-      price: 2190,
-      oldPrice: null,
-      imageAlt: 'Akril ecset termék képe',
-      category: 'eszkozok',
-      brand: 'indigo',
-      inStock: false,
-    },
-    {
-      id: '12',
-      name: 'Díszítő ecset vékony',
-      price: 1490,
-      oldPrice: null,
-      imageAlt: 'Díszítő ecset vékony termék képe',
-      category: 'diszitok',
-      brand: 'moyra',
-      inStock: true,
-    },
-  ];
+  // Konvertálás ProductListItem formátumba
+  readonly products: ProductListItem[] = MOCK_PRODUCTS.map((product) => ({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    oldPrice: product.oldPrice ?? null,
+    imageAlt: `${product.name} termék képe`,
+    category: product.category,
+    brand: 'indigo', // Placeholder brand (a mock adatoknak nincs brand mezője)
+    inStock: product.stock > 0,
+  }));
 
   // Computed filtered products
   readonly filteredProducts = computed(() => {
