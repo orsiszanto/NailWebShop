@@ -358,7 +358,7 @@
                           </div>
                           @for (item of order.items; track item) {
                             <div class="order-items-row">
-                              <div class="order-items-col">Termék</div>
+                              <div class="order-items-col">{{ item.name }}</div>
                               <div class="order-items-col">{{ item.quantity }} db</div>
                               <div class="order-items-col">{{ item.unitPrice }} Ft</div>
                               <div class="order-items-col order-items-col--total">

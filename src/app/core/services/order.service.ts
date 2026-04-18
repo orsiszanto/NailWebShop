@@ -191,11 +191,15 @@ export class OrderService {
       // 2. Rendelés tételeinek hozzáadása (items subcollection)
       // FONTOS: Az itemData csak azokat a mezőket tartalmazza, amelyeket a Firestore rules engedélyez!
       for (const cartItem of cartItems) {
+        const unitPrice = cartItem.price || cartItem.product?.price || 0;
+        const subtotal = unitPrice * cartItem.quantity;
         const itemData = {
           productId: cartItem.productId,
           quantity: cartItem.quantity,
           name: cartItem.name || cartItem.product?.name || '',
-          price: cartItem.price || cartItem.product?.price || 0,
+          price: unitPrice,
+          unitPrice: unitPrice,
+          subtotal: subtotal,
         };
 
         await addDoc(

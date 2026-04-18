@@ -1,0 +1,41 @@
+@import '../../../../styles/tokens/colors';
+@import '../../../../styles/tokens/spacing';
+
+.scroll-to-top {
+  position: fixed;
+  bottom: $space-8;
+  right: $space-8;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $color-primary, $color-accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+
+  &:hover {
+    background: linear-gradient(135deg, $color-primary-hover, darken($color-accent, 10%));
+    transform: translateY(-5px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  &:active {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    bottom: $space-5;
+    right: $space-5;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+  }
+}

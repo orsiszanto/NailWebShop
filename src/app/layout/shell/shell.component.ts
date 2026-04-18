@@ -5,6 +5,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { NotificationContainerComponent } from '../../shared/components/notification-container/notification-container.component';
+import { ScrollToTopComponent } from '../../shared/components/scroll-to-top/scroll-to-top.component';
 
 @Component({
   selector: 'app-shell',
@@ -16,6 +17,7 @@ import { NotificationContainerComponent } from '../../shared/components/notifica
     FooterComponent,
     ConfirmationDialogComponent,
     NotificationContainerComponent,
+    ScrollToTopComponent,
   ],
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
