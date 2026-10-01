@@ -57,7 +57,12 @@ emulator-ui/
 
 # Service account keys / credentials
 scripts/*.json
-scripts/nailshopweb-key.json
+**/*service-account*.json
+**/*credentials*.json
+**/*-key.json
+*.pem
+*.p12
+*.pfx
 
 # Functions
 functions/node_modules/

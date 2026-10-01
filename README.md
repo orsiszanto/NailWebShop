@@ -171,7 +171,9 @@ After installing dependencies, run the seed script from the project root:
 node scripts/seed-database.js
 ```
 
-The script writes seed products, categories, and administrator data to Firestore. Review the script before running it against a shared or production database.
+The script writes seed products, categories, and administrator profile data to Firestore. The seeded names, email addresses, phone numbers, and addresses are fictional test data for local or demo use only; do not treat them as real customer information or replace them with real personal data in the repository.
+
+Review the script before every run, and never run it against a shared or production database unless you have intentionally replaced the test data and confirmed the target project. The script creates Firestore profile records; it does not provide production credentials or passwords for these users.
 
 ## Available Scripts
 
